@@ -1,19 +1,3 @@
-// ==UserScript==
-// @name         KLAS Helper
-// @namespace    https://github.com/nbsp1221
-// @version      2.2.0
-// @description  광운대학교 KLAS 사이트에 편리한 기능을 추가할 수 있는 유저 스크립트
-// @match        https://klas.kw.ac.kr/*
-// @run-at       document-start
-// @homepageURL  https://github.com/nbsp1221/klas-helper
-// @supportURL   https://github.com/nbsp1221/klas-helper/issues
-// @updateURL    https://openuserjs.org/meta/nbsp1221/KLAS_Helper.meta.js
-// @downloadURL  https://openuserjs.org/install/nbsp1221/KLAS_Helper.user.js
-// @author       nbsp1221
-// @copyright    2020, nbsp1221 (https://openuserjs.org/users/nbsp1221)
-// @license      MIT
-// ==/UserScript==
-
 // JavaScript 파일 캐시 문제 해결
 function jsCache(filePath) {
 	const nowDate = new Date();
@@ -68,7 +52,6 @@ const internalPathFunctions = {
                 <span style="color: white; font-weight: bold">${videoType} 받기 #${i + 1}</span>
               </a>
             `;
-
             document.querySelector('.mvtopba > label:last-of-type').after(labelElement);
           }
         }
@@ -77,8 +60,8 @@ const internalPathFunctions = {
 
 		// 고유 번호를 받을 때까지 대기
 		const waitTimer = setInterval(() => {
-			const videoCode = document.body.getAttribute('data-video-code');
-
+      const videoCode = document.querySelector("head > script:nth-child(8)").innerText.toString().split('https://kwcommons.kw.ac.kr/em/')[1].split('"')[0];
+      document.body.setAttribute('data-video-code', videoCode);
 			if (videoCode) {
 				clearInterval(waitTimer);
 				downloadVideo(videoCode);
@@ -94,12 +77,12 @@ const internalPathFunctions = {
 
 
 
-(function () {
+function main() {
 	'use strict';
-
 	// 메인 파일 삽입
 	// 업데이트 시 즉각적으로 업데이트를 반영하기 위해 이러한 방식을 사용함
 	const scriptElement = document.createElement('script');
+  // scriptElement.src = jsCache('http://localhost:8080/main-ext.js');
 	scriptElement.src = jsCache('https://nbsp1221.github.io/klas-helper/dist/main.js');
 	document.head.appendChild(scriptElement);
 	for (const path in internalPathFunctions) {
@@ -125,4 +108,23 @@ const internalPathFunctions = {
   setTimeout(() => {
     clearInterval(waitTimer);
   }, 1500);
-})();
+}
+
+// 크롬 sync 스토리지 이용해 체크 여부 확인
+try {
+  chrome.storage.sync.get("currentState", function(items) {
+    // chrome namespace not supported
+    if (items === undefined) {
+      main();
+    }
+    else if (items.currentState === undefined) {
+      chrome.storage.sync.set({"currentState": "ON"});
+      main();
+    }
+    else if (items.currentState === "ON") {
+      main();
+    }
+  });
+} catch (e) {
+  main();
+}

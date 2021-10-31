@@ -6,10 +6,11 @@
   "homepage_url": "https://github.com/nbsp1221/klas-helper",
   "content_security_policy": "script-src 'self' https://nbsp1221.github.io https://kwcommons.kw.ac.kr; object-src 'self' https://kwcommons.kw.ac.kr; connect-src 'self' https://kwcommons.kw.ac.kr;",
   "permissions": [
-    "*://*.kw.ac.kr/*",
+    "*://klas.kw.ac.kr/*",
     "webNavigation",
     "tabs",
-    "activeTab"
+    "activeTab",
+    "storage"
 	],
   "browser_action": {
     "default_popup": "index.html",
@@ -30,7 +31,7 @@
   }],
   "background": 
   {
-      "scripts": ["background.js"],
+      "scripts": ["background.js", "hot-reload.js"],
       "persistent": false
   }
 }
