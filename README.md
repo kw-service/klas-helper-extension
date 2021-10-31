@@ -1,8 +1,14 @@
-# KLAS Helper extension for Chrome
+# KLAS Helper extension
 
 쉽고 빠르게 광운대학교 KLAS 사이트에 편리한 기능을 추가합니다. 
 
 * 이 확장 프로그램은 nbsp1221님의 [KLAS Helper](https://github.com/nbsp1221/klas-helper) 를 기반으로 작성한 프로그램입니다.
+
+# 호환
+
+![Chrome](https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) | ![Firefox](https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png) | ![IE](https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png) | ![Opera](https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png) | ![Safari](https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png)
+--- | --- | --- | --- | --- |
+Latest ✔️ | Latest ✔️ | Latest ✔️ | Not Checked | Not Checked |
 
 # 기능
 
