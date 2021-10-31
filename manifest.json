@@ -1,0 +1,36 @@
+{
+  "name": "KLAS Helper Standalone",
+  "manifest_version": 2,
+  "version": "0.1",
+  "description": "광운대학교 KLAS Helper 크롬 확장 프로그램",
+  "homepage_url": "https://github.com/nbsp1221/klas-helper",
+  "content_security_policy": "script-src 'self' https://nbsp1221.github.io https://kwcommons.kw.ac.kr; object-src 'self' https://kwcommons.kw.ac.kr; connect-src 'self' https://kwcommons.kw.ac.kr;",
+  "permissions": [
+    "*://*.kw.ac.kr/*",
+    "webNavigation",
+    "tabs",
+    "activeTab"
+	],
+  "browser_action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "icon.png",
+      "32": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
+  },
+  "icons": { "16": "icon.png",
+           "48": "icon.png",
+          "128": "icon.png" },
+  "content_scripts": [{
+    "matches": ["https://klas.kw.ac.kr/*", "https://kwcommons.kw.ac.kr/*"],
+    "js": ["content.js"],
+    "run_at": "document_end"
+  }],
+  "background": 
+  {
+      "scripts": ["background.js"],
+      "persistent": false
+  }
+}
