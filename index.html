@@ -4,26 +4,35 @@
     <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link rel="stylesheet" href="./style.css">
-	
+	<link rel="stylesheet" href="./switch.css">
     <title>KLAS Helper Standalone</title>
 </head>
 <body>
     <h1>🎠 광운대학교 KLAS Helper 확장 프로그램 </h1>
 	<p> 광운대학교 KLAS 사이트에 편리한 기능을 추가합니다. </p>
 	<label class="switch">
-		<input class="toggle-btn" type="checkbox">
+		<input class="toggle-btn-active" type="checkbox">
 		<span class="slider round"></span>
 	</label>
 	<div style="padding-top: 0px;">
 		<span style="font-size: 12px;" class="support-alert"></span>
 	</div>
-	<div style="flex-direction: row; justify-content:center;">
-		<a class="github-link" href="https://github.com/nbsp1221/klas-helper" target="_blank">
-			<img src="./github.png" style="width:25px; height:25px" /> KLAS Helper Github 
-		</a>
-		<a class="github-link" href="https://github.com/nbsp1221/klas-helper" target="_blank">
-			<img src="./github.png" style="width:25px; height:25px" /> KLAS Helper 확장프로그램 Github 
-		</a>
+	<div style="display:flex; align-items: flex-end; justify-content: space-between;">
+		<div style="float: left; justify-content:center;">
+			<a class="github-link" href="https://github.com/nbsp1221/klas-helper" target="_blank">
+				<img src="./github.png" style="width:25px; height:25px" /> KLAS Helper Github 
+			</a>
+			<a class="github-link" href="https://github.com/nbsp1221/klas-helper" target="_blank">
+				<img src="./github.png" style="width:25px; height:25px" /> KLAS Helper 확장프로그램 Github 
+			</a>
+		</div>
+		<div style="float: right; justify-content:center; display:flex; align-items:center">
+			<label class="switch-small">
+				<input class="toggle-btn-debug" type="checkbox">
+				<span class="slider-small round"></span>
+			</label>
+			<span style="font-size: 12px;">디버그 모드</span>
+		</div>
 	</div>
 </body>
 <script src="index.js"></script>

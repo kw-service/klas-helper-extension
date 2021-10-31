@@ -79,17 +79,6 @@ const internalPathFunctions = {
 
 function main() {
 	'use strict';
-	// 메인 파일 삽입
-	// 업데이트 시 즉각적으로 업데이트를 반영하기 위해 이러한 방식을 사용함
-	const scriptElement = document.createElement('script');
-	scriptElement.src = jsCache('https://nbsp1221.github.io/klas-helper/dist/main-ext.js');
-	document.head.appendChild(scriptElement);
-	for (const path in internalPathFunctions) {
-		if (path === location.pathname) {
-		  internalPathFunctions[path]();
-		}
-	}
-
   const waitTimer = setInterval(() => {
     if (document.querySelector('.navtxt span:nth-child(1)')) {
       document.querySelector('.navtxt span:nth-child(1)').innerHTML  = (`
@@ -103,10 +92,36 @@ function main() {
     }
   }, 100);
 
-  // 일정 시간이 지날 경우 타이머 해제
-  setTimeout(() => {
-    clearInterval(waitTimer);
-  }, 1500);
+	// 메인 파일 삽입
+	// 업데이트 시 즉각적으로 업데이트를 반영하기 위해 이러한 방식을 사용함
+	const scriptElement = document.createElement('script');
+  let jsfile = 'https://nbsp1221.github.io/klas-helper/dist/main-ext.js';
+  chrome.storage.sync.get(null, function(items) {
+    // chrome namespace not supported
+    if (items !== undefined) {
+      if (items.useDebug === undefined || items.useDebug === "OFF") {
+        chrome.storage.sync.set({"useDebug": "OFF"});
+      }
+      else if (items.useDebug === "ON") {
+        jsfile = 'http://localhost:8080/main-ext.js';
+      }
+    }
+    
+    scriptElement.src = jsCache(jsfile);
+    document.head.appendChild(scriptElement);
+    for (const path in internalPathFunctions) {
+      if (path === location.pathname) {
+        internalPathFunctions[path]();
+      }
+    }
+  
+    // 일정 시간이 지날 경우 타이머 해제
+    setTimeout(() => {
+      clearInterval(waitTimer);
+    }, 1500);
+  });
+  
+	
 }
 
 // 크롬 sync 스토리지 이용해 체크 여부 확인
