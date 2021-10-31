@@ -28,15 +28,13 @@ const internalPathFunctions = {
 	'/spv/lis/lctre/viewer/LctreCntntsViewSpvPage.do': () => {
 		// 온라인 강의 동영상 다운로드
 		const downloadVideo = (videoCode) => {
+      // CORS 허용을 위해 백그라운드로 관련 데이터를 보내고, 받아온 데이터로 렌더링을 진행합니다.
 			chrome.runtime.sendMessage({
 					"action": "downloadVideo",
 					"videoCode": videoCode
 				}, function (response) {
-          console.log(response)
           const oParser = new DOMParser();
           const documentXML  = oParser.parseFromString(response.xhr, "text/xml");
-          // = xhr.responseXML;
-          console.log(documentXML);
           const videoList = [];
 
           // 분할된 동영상 등 다양한 상황 처리
@@ -115,7 +113,7 @@ const internalPathFunctions = {
       document.querySelector('.navtxt span:nth-child(1)').innerHTML  = (`
       <span style="margin-right: 20px">
         <a href="https://github.com/nbsp1221/klas-helper" target="_blank" rel="noopener">KLAS Helper</a>
-        <a href="https://github.com/nbsp1221/klas-helper" target="_blank" rel="noopener">확장 프로그램</a>
+        <a href="https://github.com/mirusu400/klas-helper-extension" target="_blank" rel="noopener">확장 프로그램</a>
         사용 중
       </span>
     `);

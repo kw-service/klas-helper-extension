@@ -13,6 +13,7 @@ function asyncGetData(request) {
   })     
 }
 
+// content.js 와 통신하는 백그라운드 함수
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'downloadVideo') {
     (async () => {
