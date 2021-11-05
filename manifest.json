@@ -1,29 +1,29 @@
 {
   "name": "KLAS Helper Standalone",
   "manifest_version": 2,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "광운대학교 KLAS Helper 확장 프로그램",
   "homepage_url": "https://github.com/mirusu400/klas-helper-extension",
   "content_security_policy": "script-src 'self' https://nbsp1221.github.io https://kwcommons.kw.ac.kr; object-src 'self' https://kwcommons.kw.ac.kr; connect-src 'self' https://kwcommons.kw.ac.kr;",
   "permissions": [
     "*://klas.kw.ac.kr/*",
-    "webNavigation",
-    "tabs",
-    "activeTab",
     "storage"
 	],
   "browser_action": {
     "default_popup": "index.html",
     "default_icon": {
-      "16": "icon.png",
-      "32": "icon.png",
-      "48": "icon.png",
-      "128": "icon.png"
+      "16": "icon_16x16.png",
+      "32": "icon_32x32.png",
+      "48": "icon_48x48.png",
+      "128": "icon_128x128.png"
     }
   },
-  "icons": { "16": "icon.png",
-           "48": "icon.png",
-          "128": "icon.png" },
+  "icons": {
+    "16": "icon_16x16.png",
+    "32": "icon_32x32.png",
+    "48": "icon_48x48.png",
+    "128": "icon_128x128.png"
+  },
   "content_scripts": [{
     "matches": ["https://klas.kw.ac.kr/*", "https://kwcommons.kw.ac.kr/*"],
     "js": ["content.js"],
@@ -31,7 +31,7 @@
   }],
   "background": 
   {
-      "scripts": ["background.js", "hot-reload.js"],
+      "scripts": ["background.js"],
       "persistent": false
   }
 }
