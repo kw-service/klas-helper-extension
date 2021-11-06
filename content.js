@@ -1,3 +1,7 @@
+if (typeof browser === "undefined") {
+  var browser = chrome;
+}
+
 // JavaScript 파일 캐시 문제 해결
 function jsCache(filePath) {
 	const nowDate = new Date();
@@ -13,7 +17,7 @@ const internalPathFunctions = {
 		// 온라인 강의 동영상 다운로드
 		const downloadVideo = (videoCode) => {
       // CORS 허용을 위해 백그라운드로 관련 데이터를 보내고, 받아온 데이터로 렌더링을 진행합니다.
-			chrome.runtime.sendMessage({
+			browser.runtime.sendMessage({
 					"action": "downloadVideo",
 					"videoCode": videoCode
 				}, function (response) {
@@ -91,48 +95,61 @@ function main() {
       clearInterval(waitTimer);
     }
   }, 100);
-
+  
 	// 메인 파일 삽입
 	// 업데이트 시 즉각적으로 업데이트를 반영하기 위해 이러한 방식을 사용함
 	const scriptElement = document.createElement('script');
-  let jsfile = 'https://nbsp1221.github.io/klas-helper/dist/main-ext.js';
-  chrome.storage.sync.get(null, function(items) {
-    // chrome namespace not supported
-    if (items !== undefined) {
-      if (items.useDebug === undefined || items.useDebug === "OFF") {
-        chrome.storage.sync.set({"useDebug": "OFF"});
-      }
-      else if (items.useDebug === "ON") {
-        jsfile = 'http://localhost:8080/main-ext.js';
-      }
+  // let jsfile = 'https://nbsp1221.github.io/klas-helper/dist/main-ext.js';
+  let jsfile = browser.runtime.getURL("main-ext.js");
+
+  scriptElement.src = jsCache(jsfile);
+  document.head.appendChild(scriptElement);
+  for (const path in internalPathFunctions) {
+    if (path === location.pathname) {
+      internalPathFunctions[path]();
     }
+  }
+
+  // 일정 시간이 지날 경우 타이머 해제
+  setTimeout(() => {
+    clearInterval(waitTimer);
+  }, 1500);
+
+  // browser.storage.sync.get(null, function(items) {
+  //   // chrome namespace not supported
+  //   if (items !== undefined) {
+  //     if (items.useDebug === undefined || items.useDebug === "OFF") {
+  //       browser.storage.sync.set({"useDebug": "OFF"});
+  //     }
+  //     else if (items.useDebug === "ON") {
+  //       jsfile = 'http://localhost:8080/main-ext.js';
+  //     }
+  //   }
     
-    scriptElement.src = jsCache(jsfile);
-    document.head.appendChild(scriptElement);
-    for (const path in internalPathFunctions) {
-      if (path === location.pathname) {
-        internalPathFunctions[path]();
-      }
-    }
+  //   scriptElement.src = jsCache(jsfile);
+  //   document.head.appendChild(scriptElement);
+  //   for (const path in internalPathFunctions) {
+  //     if (path === location.pathname) {
+  //       internalPathFunctions[path]();
+  //     }
+  //   }
   
-    // 일정 시간이 지날 경우 타이머 해제
-    setTimeout(() => {
-      clearInterval(waitTimer);
-    }, 1500);
-  });
-  
-	
+  //   // 일정 시간이 지날 경우 타이머 해제
+  //   setTimeout(() => {
+  //     clearInterval(waitTimer);
+  //   }, 1500);
+  // });
 }
 
 // 크롬 sync 스토리지 이용해 체크 여부 확인
 try {
-  chrome.storage.sync.get("currentState", function(items) {
+  browser.storage.sync.get("currentState", function(items) {
     // chrome namespace not supported
     if (items === undefined) {
       main();
     }
     else if (items.currentState === undefined) {
-      chrome.storage.sync.set({"currentState": "ON"});
+      browser.storage.sync.set({"currentState": "ON"});
       main();
     }
     else if (items.currentState === "ON") {

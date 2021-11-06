@@ -1,7 +1,10 @@
+if (typeof browser === "undefined") {
+     var browser = chrome;
+}
 
 const activeBtn = document.querySelector(".toggle-btn-active");
 const debugBtn = document.querySelector(".toggle-btn-debug");
-chrome.storage.sync.get(null, function(items) {
+browser.storage.sync.get(null, function(items) {
     // Toggle button not supprted in Firefox
     if (items == undefined) {
         document.querySelector(".support-alert").innerText = `
@@ -10,7 +13,7 @@ chrome.storage.sync.get(null, function(items) {
         activeBtn.checked = true;
         return;
     } else if (items.currentState === undefined) {
-        chrome.storage.sync.set({currentState: "ON"});
+        browser.storage.sync.set({currentState: "ON"});
         activeBtn.checked = true;
     } else if (items.currentState === "OFF") {
         activeBtn.checked = false;
@@ -19,7 +22,7 @@ chrome.storage.sync.get(null, function(items) {
     }
 
     if (items.useDebug === undefined) {
-        chrome.storage.sync.set({useDebug: "OFF"});
+        browser.storage.sync.set({useDebug: "OFF"});
     } else if (items.useDebug === "OFF") {
         debugBtn.checked = false;
     } else if (items.useDebug === "ON") {
@@ -30,16 +33,16 @@ chrome.storage.sync.get(null, function(items) {
 
 activeBtn.onclick = function() {
     if (activeBtn.checked) {
-        chrome.storage.sync.set({currentState: "ON"});
+        browser.storage.sync.set({currentState: "ON"});
     } else {
-        chrome.storage.sync.set({currentState: "OFF"});
+        browser.storage.sync.set({currentState: "OFF"});
     }
 }
 
 debugBtn.onclick = function() {
     if (debugBtn.checked) {
-        chrome.storage.sync.set({useDebug: "ON"});
+        browser.storage.sync.set({useDebug: "ON"});
     } else {
-        chrome.storage.sync.set({useDebug: "OFF"});
+        browser.storage.sync.set({useDebug: "OFF"});
     }
 }
