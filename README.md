@@ -18,9 +18,17 @@ Latest ✔️ | Latest ✔️ | Latest ✔️ | Not Checked | Not Checked |
 
 # 설치
 
-TODO
+* Chrome
+[크롬 앱스토어](https://chrome.google.com/webstore/detail/klas-helper/jicidjkhiefbhbgbfbemakjndloecjlf) 에서 설치를 진행하면 됩니다.
+
+* Firefox
+[Releases](https://github.com/mirusu400/klas-helper-extension/releases) 에 존재하는 가장 최근 확장 프로그램 파일 (*.xpi) 를 다운받아 적용하면 됩니다.
+
+* 기타
+[Releases](https://github.com/mirusu400/klas-helper-extension/releases) 에 존재하는 가장 최근 확장 프로그램 소스 파일을 다운받아 수동으로 적용하면 됩니다.
 
 # 기여
 
-1. 빈 `hot-reload.js` 파일을 만들거나 [이곳의 hot-reload.js](https://github.com/xpl/crx-hotreload/blob/master/hot-reload.js) 파일을 다운받아, `manifest.json` 파일과 동일한 위치에 놔둡니다.
-2. 이후 크롬 확장프로그램과 동일하게 개발 후 기여를 해주시면 됩니다.
+* Klas를 사용하시면서 불편했던 점에 대한 Issue 및 Pull request 환영합니다. [KLAS Helper](https://github.com/nbsp1221/klas-helper) 저장소와 해당 저장소 모두 확인을 하고 있으므로 아무 저장소에나 Issue 진행해주세요.
+* 기본적으로 핵심적인 기능을 하는 `main-ext.js`파일은 [KLAS Helper](https://github.com/nbsp1221/klas-helper) 와 동일합니다. 해당 저장소 내의 기여 문서를 참고해 주세요.
+
