@@ -1,0 +1,132 @@
+:root {
+    --custom-white: #dddddd;
+    --custom-dark-background: #373737;
+    --custom-dark-secondary: #616161;
+    --custom-dark-thirdly: #737373;
+    --custom-text-white: #dddddd;
+    --custom-text-white-secondary: #d0d0d0;
+    --custom-text-black: #373737;
+    --custom-gw-primary: #3a051f;
+}
+
+/* 기본 백그라운드 */
+.py-5, .py-4 {
+    background-color: var(--custom-dark-background) !important;
+}
+
+/* 상단 바 */
+.bg-top {
+    /* background-color: #1A0209 !important; */
+}
+
+.bg-menu {
+    background-color: var(--custom-dark-secondary) !important;
+}
+
+/* 상단 바 메뉴들 */
+.depth02ul li a {
+    color: var(--custom-text-white) !important;
+}
+.depth03ul li a {
+    color: var(--custom-text-white-secondary) !important;
+}
+.title-text {
+    color: var(--custom-text-white);
+}
+
+/* 스케줄 테이블 */
+table.scheduletb td p {
+    color: var(--custom-dark-secondary)!important;
+}
+table.scheduletb th, table.scheduletb td.time {
+    color: var(--custom-text-white) !important;
+}
+
+/* 수강과목 */
+.subjectlist .left span {
+    color: var(--custom-text-white-secondary) !important;
+}
+
+.subjecttypenotice li span.day {
+    color: var(--custom-text-white-secondary) !important;
+}
+
+/* 캔버스 (chart.js) */
+canvas {
+    background-color: var(--custom-white) !important;
+}
+
+/* 일반 테이블 */
+.tablegw {
+    background-color: var(--custom-dark-secondary) !important;
+}
+
+.popover-content {
+    background-color: var(--custom-dark-thirdly) !important;
+    border: 1px solid var(--custom-dark-secondary) !important;
+}
+.tablegw td, .tablegw th {
+    background: var(--custom-dark-secondary) !important;
+    color: var(--custom-text-white) !important;
+}
+
+.c-title {
+    color: var(--custom-text-white) !important;
+}
+
+.board_write_form dl * {
+    color: var(--custom-text-white) !important;
+}
+
+.board_notice * {
+    color: var(--custom-text-white-secondary) !important;
+}
+
+/* 외부 글쓰기 iframe */
+.se2_input_area {
+    background-color: var(--custom-white) !important;
+}
+
+
+.c-day-content {
+    color: var(--custom-text-white) !important;
+}
+
+#no-deadline span {
+    color: var(--custom-text-white-secondary) !important;
+}
+#yes-deadline * {
+    color: var(--custom-text-white-secondary) !important;
+}
+#appSelectSubj .aC {
+    color: var(--custom-text-white-secondary) !important;
+}
+
+/* 하위 컴포넌트 */
+.card {
+    background-color: var(--custom-dark-thirdly) !important;
+}
+.oval {
+    background-color: var(--custom-dark-thirdly) !important;
+    color: var(--custom-text-white) !important;
+}
+
+.mb-4 {
+    background-color: var(--custom-dark-secondary) !important;
+}
+.mb-4 span, .mb-4 a, .mb-4 p, .mb-4 li{
+    color: var(--custom-text-white);
+}
+.mb-4 table thead tr td, .mb-4 table thead tr th {
+    color: var(--custom-text-white);
+}
+.mb-4 table tbody tr td, .mb-4 table tbody tr th, .mb-4 table thead tr td, .mb-4 table thead tr th {
+    background-color: var(--custom-dark-thirdly) !important;
+    color: var(--custom-text-white-secondary);
+}
+
+
+/* 버튼 */
+.btn-gray {
+    border: 1px solid #fff !important;
+}

@@ -1,5 +1,5 @@
 {
-  "name": "KLAS Helper Standalone",
+  "name": "KLAS Helper",
   "manifest_version": 2,
   "version": "1.0.4",
   "description": "광운대학교 KLAS Helper 확장 프로그램",
@@ -7,7 +7,8 @@
   "permissions": [
     "*://klas.kw.ac.kr/*",
     "*://kwcommons.kw.ac.kr/*",
-    "storage"
+    "storage",
+    "tabs"
 	],
   "browser_action": {
     "default_popup": "index.html",
@@ -28,9 +29,14 @@
     "matches": ["https://klas.kw.ac.kr/*"],
     "js": ["content.js"],
     "run_at": "document_end"
+  }, {
+    "matches": ["https://klas.kw.ac.kr/*"],
+    "js": ["styling.js"],
+    "run_at": "document_start"
   }],
   "web_accessible_resources": [
-    "main-ext.js"
+    "main-ext.js",
+    "dark.css"
   ],
   "background": {
       "scripts": ["background.js"],

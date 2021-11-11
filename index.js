@@ -3,7 +3,9 @@ if (typeof browser === "undefined") {
 }
 
 const activeBtn = document.querySelector(".toggle-btn-active");
+const darkBtn = document.querySelector(".toggle-btn-dark");
 const debugBtn = document.querySelector(".toggle-btn-debug");
+
 browser.storage.sync.get(null, function(items) {
     // Toggle button not supprted in Firefox
     if (items == undefined) {
@@ -28,6 +30,14 @@ browser.storage.sync.get(null, function(items) {
     } else if (items.useDebug === "ON") {
         debugBtn.checked = true;
     }
+
+    if (items.useDark === undefined) {
+        browser.storage.sync.set({useDark: "OFF"});
+    } else if (items.useDark === "OFF") {
+        darkBtn.checked = false;
+    } else if (items.useDark === "ON") {
+        darkBtn.checked = true;
+    }
 });
 
 
@@ -44,5 +54,13 @@ debugBtn.onclick = function() {
         browser.storage.sync.set({useDebug: "ON"});
     } else {
         browser.storage.sync.set({useDebug: "OFF"});
+    }
+}
+
+darkBtn.onclick = function() {
+    if (darkBtn.checked) {
+        browser.storage.sync.set({useDark: "ON"});
+    } else {
+        browser.storage.sync.set({useDark: "OFF"});
     }
 }
