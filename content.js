@@ -112,11 +112,6 @@ function main() {
     }
   }
 
-  // 일정 시간이 지날 경우 타이머 해제
-  setTimeout(() => {
-    clearInterval(waitTimer);
-  }, 1500);
-
   browser.storage.sync.get(null, function(items) {
     // chrome namespace not supported
     if (items !== undefined) {

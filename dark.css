@@ -82,6 +82,18 @@ canvas {
     color: var(--custom-text-white-secondary) !important;
 }
 
+.board_viewfile * {
+    color: var(--custom-text-black) !important;
+}
+
+.next_prev_box dt {
+    color: var(--custom-text-white) !important;
+}
+
+.next_prev_box dd {
+    color: var(--custom-text-white-secondary) !important;
+}
+
 /* 외부 글쓰기 iframe */
 .se2_input_area {
     background-color: var(--custom-white) !important;

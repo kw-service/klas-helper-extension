@@ -32,3 +32,28 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
 });
+
+// disabled / enabled 됐을 시 아이콘 변경
+browser.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+  if (msg.action === "updateIcon") {
+      if (msg.value === "disabled") {
+        browser.browserAction.setIcon({
+          path : {
+            "16": "/assets/icon_disabled_16x16.png",
+            "32": "/assets/icon_disabled_32x32.png",
+            "48": "/assets/icon_disabled_48x48.png",
+            "128": "/assets/icon_disabled_128x128.png"
+          }
+        });
+      } else {
+        browser.browserAction.setIcon({
+          path : {
+            "16": "/assets/icon_16x16.png",
+            "32": "/assets/icon_32x32.png",
+            "48": "/assets/icon_48x48.png",
+            "128": "/assets/icon_128x128.png"
+          }
+        });
+      }
+  }
+});

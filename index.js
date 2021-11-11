@@ -16,10 +16,22 @@ browser.storage.sync.get(null, function(items) {
         return;
     } else if (items.currentState === undefined) {
         browser.storage.sync.set({currentState: "ON"});
+        chrome.runtime.sendMessage({
+            action: 'updateIcon',
+            value: "enabled"
+        });
         activeBtn.checked = true;
     } else if (items.currentState === "OFF") {
+        chrome.runtime.sendMessage({
+            action: 'updateIcon',
+            value: "disabled"
+        });
         activeBtn.checked = false;
     } else if (items.currentState === "ON") {
+        chrome.runtime.sendMessage({
+            action: 'updateIcon',
+            value: "enabled"
+        });
         activeBtn.checked = true;
     }
 
@@ -44,8 +56,16 @@ browser.storage.sync.get(null, function(items) {
 activeBtn.onclick = function() {
     if (activeBtn.checked) {
         browser.storage.sync.set({currentState: "ON"});
+        chrome.runtime.sendMessage({
+            action: 'updateIcon',
+            value: "enabled"
+        });
     } else {
         browser.storage.sync.set({currentState: "OFF"});
+        chrome.runtime.sendMessage({
+            action: 'updateIcon',
+            value: "disabled"
+        });
     }
 }
 
