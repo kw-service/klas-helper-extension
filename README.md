@@ -14,18 +14,22 @@ Latest ✔️ | Latest ✔️ | Latest ✔️ | Not Checked | Not Checked |
 
 1. 기존 `KLAS Helper`와 다르게, `CORS`에 대한 걱정 없이 사용이 가능합니다.
 2. 느린 인터넷 환경에서도 아무 문제 없이 사용이 가능합니다.
-3. 귀여운 팡팡이 아이콘을 볼 수 있습니다.
+3. 다크 모드 지원 등 기존 `KLAS Helper`의 특성상 사용할수 없었던 기능이 제공됩니다.
+4. 귀여운 팡팡이 아이콘을 볼 수 있습니다.
 
 # 설치
 
-* Chrome
+### Chrome
+
 [크롬 앱스토어](https://chrome.google.com/webstore/detail/klas-helper/jicidjkhiefbhbgbfbemakjndloecjlf) 에서 설치를 진행하면 됩니다.
 
-* Firefox
-[Releases](https://github.com/mirusu400/klas-helper-extension/releases) 에 존재하는 가장 최근 확장 프로그램 파일 (*.xpi) 를 다운받아 적용하면 됩니다.
+### Firefox
 
-* 기타
-[Releases](https://github.com/mirusu400/klas-helper-extension/releases) 에 존재하는 가장 최근 확장 프로그램 소스 파일을 다운받아 수동으로 적용하면 됩니다.
+[Releases](https://github.com/mirusu400/klas-helper-extension/releases) 에 존재하는 가장 최근 확장 프로그램 파일 `(*.xpi)` 를 다운받아 적용하면 됩니다.
+
+### 기타
+
+[Releases](https://github.com/mirusu400/klas-helper-extension/releases) 에 존재하는 가장 최근 확장 프로그램 `소스 파일`을 다운받아 수동으로 적용하면 됩니다.
 
 # 기여
 
