@@ -1,0 +1,12 @@
+{
+    "addons": {
+      "{abcd1234-1abc-1234-12ab-abcdef123456}": {
+        "updates": [
+          {
+            "version": "1.0.5",
+            "update_link": "https://github.com/mirusu400/klas-helper-extension/releases/download/v1.0.5/klas_helper-1.0.5-fx.xpi"
+          }
+        ]
+      }
+    }
+  }
