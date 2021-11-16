@@ -5,6 +5,7 @@ if (typeof browser === "undefined") {
 const activeBtn = document.querySelector(".toggle-btn-active");
 const darkBtn = document.querySelector(".toggle-btn-dark");
 const debugBtn = document.querySelector(".toggle-btn-debug");
+const betaBtn = document.querySelector(".toggle-btn-beta");
 
 browser.storage.sync.get(null, function(items) {
     // Toggle button not supprted in Firefox
@@ -35,6 +36,7 @@ browser.storage.sync.get(null, function(items) {
         activeBtn.checked = true;
     }
 
+    // 디버그 여부
     if (items.useDebug === undefined) {
         browser.storage.sync.set({useDebug: "OFF"});
     } else if (items.useDebug === "OFF") {
@@ -43,12 +45,22 @@ browser.storage.sync.get(null, function(items) {
         debugBtn.checked = true;
     }
 
+    // 다크테마 여부
     if (items.useDark === undefined) {
         browser.storage.sync.set({useDark: "OFF"});
     } else if (items.useDark === "OFF") {
         darkBtn.checked = false;
     } else if (items.useDark === "ON") {
         darkBtn.checked = true;
+    }
+
+    // 베타버전 여부
+    if (items.useBeta === undefined) {
+        browser.storage.sync.set({useBeta: "OFF"});
+    } else if (items.useBeta === "OFF") {
+        betaBtn.checked = false;
+    } else if (items.useBeta === "ON") {
+        betaBtn.checked = true;
     }
 });
 
@@ -82,5 +94,14 @@ darkBtn.onclick = function() {
         browser.storage.sync.set({useDark: "ON"});
     } else {
         browser.storage.sync.set({useDark: "OFF"});
+    }
+}
+
+
+betaBtn.onclick = function() {
+    if (betaBtn.checked) {
+        browser.storage.sync.set({useBeta: "ON"});
+    } else {
+        browser.storage.sync.set({useBeta: "OFF"});
     }
 }

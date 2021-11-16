@@ -81,14 +81,14 @@ const internalPathFunctions = {
 
 
 
-function main() {
+async function main() {
 	'use strict';
   const waitTimer = setInterval(() => {
     if (document.querySelector('.navtxt span:nth-child(1)')) {
       document.querySelector('.navtxt span:nth-child(1)').innerHTML  = (`
       <span style="margin-right: 20px">
-        <a href="https://github.com/nbsp1221/klas-helper" target="_blank" rel="noopener">KLAS Helper</a>
-        <a href="https://github.com/mirusu400/klas-helper-extension" target="_blank" rel="noopener">확장 프로그램</a>
+        <a href="https://github.com/klas-helper/klas-helper" target="_blank" rel="noopener">KLAS Helper</a>
+        <a href="https://github.com/klas-helper/klas-helper-extension" target="_blank" rel="noopener">확장 프로그램</a>
         사용 중
       </span>
     `);
@@ -101,18 +101,21 @@ function main() {
 	// 메인 파일 삽입
 	// 업데이트 시 즉각적으로 업데이트를 반영하기 위해 이러한 방식을 사용함
 	const scriptElement = document.createElement('script');
-  let jsfile = 'https://nbsp1221.github.io/klas-helper/dist/main-ext.js';
-  // let jsfile = browser.runtime.getURL("main-ext.js");
-
-  scriptElement.src = jsCache(jsfile);
-  document.head.appendChild(scriptElement);
-  for (const path in internalPathFunctions) {
-    if (path === location.pathname) {
-      internalPathFunctions[path]();
+  // let jsfile = 'https://nbsp1221.github.io/klas-helper/dist/main-ext.js';
+  let jsfile = browser.runtime.getURL("core/main-ext.js");
+  await browser.storage.sync.get(null, function(items) {
+    // Toggle button not supprted in Firefox
+    if (items !== undefined) {
+      if (items.useBeta === undefined || items.useBeta === "OFF") {
+        browser.storage.sync.set({"useBeta": "OFF"});
+      }
+      if (items.useBeta === "ON") {
+        jsfile = 'https://klas-helper.github.io/klas-helper/dist/main-ext.js';
+      }
     }
-  }
+  });
 
-  browser.storage.sync.get(null, function(items) {
+  await browser.storage.sync.get(null, function(items) {
     // chrome namespace not supported
     if (items !== undefined) {
       if (items.useDebug === undefined || items.useDebug === "OFF") {
