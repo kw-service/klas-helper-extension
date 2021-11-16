@@ -11,3 +11,31 @@ body {
     align-items: center;
     flex-direction:row;
 }
+
+.tooltip {
+    position: relative;
+    display: block;
+}
+  
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 170px;
+    background-color:rgba(0, 0, 0, 0.8);
+    color: #fff;
+    word-break: keep-all;
+    text-align: center;
+    font-size: 9pt;
+    border-radius: 10px;
+    padding: 5px 0;
+
+    position: absolute;
+    z-index: 1;
+}
+  
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+.tooltip .tooltip-right {
+    top: -5px;
+    right: 110%;
+}
