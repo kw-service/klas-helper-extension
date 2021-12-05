@@ -107,7 +107,6 @@ async function main() {
       document.head.appendChild(scriptElement);
       for (const path in internalPathFunctions) {
         if (path === location.pathname) {
-          console.log(path);
           internalPathFunctions[path]();
         }
       }
