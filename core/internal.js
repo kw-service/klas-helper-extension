@@ -57,7 +57,10 @@ export const internalPathFunctions = {
 
 		// 고유 번호를 받을 때까지 대기
 		const waitTimer = setInterval(() => {
-      const videoCode = document.querySelector("head > script:nth-child(8)").innerText.toString().split('https://kwcommons.kw.ac.kr/em/')[1].split('"')[0];
+      const innerelem = document.querySelector("head > script:nth-child(8)").innerText.toString().includes('kwcommons.kw.ac.kr')
+                        ? document.querySelector("head > script:nth-child(8)")
+                        : document.querySelector("head > script:nth-child(7)");
+      const videoCode = innerelem.innerText.toString().split('https://kwcommons.kw.ac.kr/em/')[1].split('"')[0];
       document.body.setAttribute('data-video-code', videoCode);
 			if (videoCode) {
 				clearInterval(waitTimer);
@@ -107,6 +110,7 @@ export const internalPathFunctions = {
       const element = document.getElementsByClassName("form-control")[0]
       try {
         browser.storage.sync.get(null, function(items) {
+          console.log(items);
           if (items.timeTableIdx === undefined) {
             browser.storage.sync.set({"timeTableIdx": 0});
           }
@@ -119,10 +123,12 @@ export const internalPathFunctions = {
         ;
       }
     }
-    changeTimeTable();
+    setTimeout(() => {
+      changeTimeTable();
+    }, 150);
     setTimeout(() => {
       document.querySelector('.scheduletitle > select').addEventListener("change", renderButton);
-    }, 100);
+    }, 200);
     
   }
 };
