@@ -13,6 +13,14 @@
           {
             "version": "1.0.7",
             "update_link": "https://github.com/klas-helper/klas-helper-extension/releases/download/v1.0.7/klas_helper-1.0.7-fx.xpi"
+          },
+          {
+            "version": "1.0.7.1",
+            "update_link": "https://github.com/klas-helper/klas-helper-extension/releases/download/v1.0.7.1/klas_helper-1.0.7.1-fx.xpi"
+          },
+          {
+            "version": "1.0.7.2",
+            "update_link": "https://github.com/klas-helper/klas-helper-extension/releases/download/v1.0.7.2/klas_helper-1.0.7.2-fx.xpi"
           }
         ]
       }
