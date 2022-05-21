@@ -18,7 +18,7 @@ export const internalPathFunctions = {
           const documentXML  = oParser.parseFromString(response.xhr, "text/xml");
           const webURI = documentXML.getElementsByTagName("web")[0].innerHTML;
           const storyIDs = [...documentXML.getElementsByTagName("story")].map(story => story.getAttribute("id"));
-          const videoTitle = documentXML.getElementsByTagName("title")[0].innerHTML.replace(/(<!\[CDATA\[)|(\]\]\>)|([^a-zA-z0-9 ()]+)/g, '');
+          const videoTitle = documentXML.getElementsByTagName("title")[0].innerHTML.replace(/(<!\[CDATA\[)|(\]\]\>)|([^a-zA-z0-9 ()ㄱ-ㅎㅏ-ㅣ가-힣]+)/g, '');
           const slideListURIs = [...storyIDs].map(storyID => `${webURI}/slide_list_${storyID}.xml?_=${Date.now()}`);
           const videoList = [];
           // 분할된 동영상 등 다양한 상황 처리
