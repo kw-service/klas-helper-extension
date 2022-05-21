@@ -16,6 +16,10 @@ export const internalPathFunctions = {
 				}, function (response) {
           const oParser = new DOMParser();
           const documentXML  = oParser.parseFromString(response.xhr, "text/xml");
+          const webURI = documentXML.getElementsByTagName("web")[0].innerHTML;
+          const storyID = documentXML.getElementsByTagName("story")[0].getAttribute("id");
+          const videoTitle = documentXML.getElementsByTagName("title")[0].innerHTML.replace(/(<!\[CDATA\[)|(\]\]\>)|([^a-zA-z0-9 ()]+)/g, '');
+          const slideListURI = `${webURI}/slide_list_${storyID}.xml?_=${Date.now()}`;
           const videoList = [];
 
           // 분할된 동영상 등 다양한 상황 처리
@@ -37,7 +41,7 @@ export const internalPathFunctions = {
               });
             }
           }
-
+          
           // 다운로드 버튼 렌더링
           for (let i = 0; i < videoList.length; i++) {
             const videoURL = videoList[i].url;
@@ -51,9 +55,67 @@ export const internalPathFunctions = {
             `;
             document.querySelector('.mvtopba > label:last-of-type').after(labelElement);
           }
-        }
-      );
-		};
+
+          // 슬라이드 다운로드, 마찬가지로 백그라운드 이용
+          browser.runtime.sendMessage({
+            "action": "downloadSlide",
+            "slideListURI": slideListURI
+          }, function(response) {
+            if (response.xhr === "") {
+              return;
+            }
+            const oParser = new DOMParser();
+            const documentXML  = oParser.parseFromString(response.xhr, "text/xml");
+            const slideURIList = []
+            for (let i = 0; i < documentXML.getElementsByTagName('slide_image_src').length; i++) {
+              const slide = documentXML.getElementsByTagName('slide_image_src')[i];
+              slideURIList.push(`${webURI}/${slide.getAttribute("image_uri")}`);
+            }
+
+            const labelElement = document.createElement('label');
+            labelElement.innerHTML = `
+              <a target="_blank" class="download-slide" style="cursor: pointer; background-color: brown; padding: 10px; text-decoration: none">
+                <span style="color: white; font-weight: bold">슬라이드 받기</span>
+              </a>
+            `;
+
+            // "슬라이드 받기" 이벤트 핸들러 매핑
+            labelElement.onclick = () => {
+              // 한번만 다운로드 가능
+              const downloadButton = document.getElementsByClassName("download-slide")[0]
+              if (downloadButton.style.backgroundColor === "brown") {
+                downloadButton.style.backgroundColor = "grey";
+                const imageBlobs = [];
+                for (let i = 0; i < slideURIList.length; i++) {
+                  browser.runtime.sendMessage({
+                    "action": "downloadImage",
+                    "imageURI": slideURIList[i]
+                  }, async function(response) {
+                    const res = await fetch(response.blob);
+                    const blob = await res.blob();
+                    imageBlobs.push(blob);
+                    if (imageBlobs.length === slideURIList.length) {
+                      const FileSaverSrc = chrome.runtime.getURL("assets/FileSaver.js");
+                      const FileSaverLib = await import(FileSaverSrc);
+                      // JSZip 로드
+                      const JSZipSrc = chrome.runtime.getURL("assets/jszip.min.js");
+                      const JSZipLib = await import(JSZipSrc);
+                      const zip = new JSZip();
+                      for (let i = 0; i < imageBlobs.length; i++) {
+                        zip.file(`${videoTitle}_slide_${i + 1}.jpg`, imageBlobs[i]);
+                      }
+                      zip.generateAsync({type:"blob"}).then(function(content) {
+                        saveAs(content, `${videoTitle}_slide.zip`);
+                      });
+                    }
+                  });
+                }
+              }
+            }
+            document.querySelector('.mvtopba > label:last-of-type').after(labelElement);
+          });
+        })
+      }
 
 		// 고유 번호를 받을 때까지 대기
 		const waitTimer = setInterval(() => {
