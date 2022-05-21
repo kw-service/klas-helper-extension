@@ -1,7 +1,7 @@
 {
   "name": "KLAS Helper",
   "manifest_version": 2,
-  "version": "1.0.8.1",
+  "version": "1.0.9.0",
   "description": "광운대학교 KLAS Helper 확장 프로그램",
   "homepage_url": "https://github.com/klas-helper/klas-helper-extension",
   "permissions": [
@@ -36,6 +36,8 @@
   "web_accessible_resources": [
     "core/internal.js",
     "core/main-ext.js",
+    "assets/jszip.min.js",
+    "assets/FileSaver.js",
     "dark.css"
   ],
   "background": {
