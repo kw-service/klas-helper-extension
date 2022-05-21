@@ -14,14 +14,13 @@ export const internalPathFunctions = {
 					"action": "downloadVideo",
 					"videoCode": videoCode
 				}, function (response) {
-          const oParser = new DOMParser();
+          const oParser = new DOMParser();        
           const documentXML  = oParser.parseFromString(response.xhr, "text/xml");
           const webURI = documentXML.getElementsByTagName("web")[0].innerHTML;
-          const storyID = documentXML.getElementsByTagName("story")[0].getAttribute("id");
+          const storyIDs = [...documentXML.getElementsByTagName("story")].map(story => story.getAttribute("id"));
           const videoTitle = documentXML.getElementsByTagName("title")[0].innerHTML.replace(/(<!\[CDATA\[)|(\]\]\>)|([^a-zA-z0-9 ()]+)/g, '');
-          const slideListURI = `${webURI}/slide_list_${storyID}.xml?_=${Date.now()}`;
+          const slideListURIs = [...storyIDs].map(storyID => `${webURI}/slide_list_${storyID}.xml?_=${Date.now()}`);
           const videoList = [];
-
           // 분할된 동영상 등 다양한 상황 처리
           if (documentXML.getElementsByTagName('desktop').length > 0) {
             videoList.push({
@@ -33,7 +32,7 @@ export const internalPathFunctions = {
             const mediaURI = documentXML.getElementsByTagName('media_uri')[0].innerHTML;
             const videoNames = documentXML.getElementsByTagName('main_media');
             const videoTypes = documentXML.getElementsByTagName('story_type');
-
+            console.log(videoNames[0].innerHTML);
             for (let i = 0; i < videoNames.length; i++) {
               videoList.push({
                 url: mediaURI.replace('[MEDIA_FILE]', videoNames[i].innerHTML),
@@ -59,19 +58,25 @@ export const internalPathFunctions = {
           // 슬라이드 다운로드, 마찬가지로 백그라운드 이용
           browser.runtime.sendMessage({
             "action": "downloadSlide",
-            "slideListURI": slideListURI
+            "slideListURIs": slideListURIs
           }, function(response) {
-            if (response.xhr === "") {
+            if (response.xhrs === "") {
               return;
             }
-            const oParser = new DOMParser();
-            const documentXML  = oParser.parseFromString(response.xhr, "text/xml");
             const slideURIList = []
-            for (let i = 0; i < documentXML.getElementsByTagName('slide_image_src').length; i++) {
-              const slide = documentXML.getElementsByTagName('slide_image_src')[i];
-              slideURIList.push(`${webURI}/${slide.getAttribute("image_uri")}`);
+            for (let i = 0; i < response.xhrs.length; i++) {
+              const oParser = new DOMParser();
+              const documentXML = oParser.parseFromString(response.xhrs[i], "text/xml");
+              for (let j = 0; j < documentXML.getElementsByTagName('slide_image_src').length; j++) {
+                const slide = documentXML.getElementsByTagName('slide_image_src')[j];
+                slideURIList.push(`${webURI}/${slide.getAttribute("image_uri")}`);
+              }
             }
-
+            
+            // 슬라이드 다운로드 버튼 렌더링
+            if (slideURIList.length === 0) {
+              return;
+            }
             const labelElement = document.createElement('label');
             labelElement.innerHTML = `
               <a target="_blank" class="download-slide" style="cursor: pointer; background-color: brown; padding: 10px; text-decoration: none">
@@ -84,16 +89,17 @@ export const internalPathFunctions = {
               // 한번만 다운로드 가능
               const downloadButton = document.getElementsByClassName("download-slide")[0]
               if (downloadButton.style.backgroundColor === "brown") {
-                downloadButton.style.backgroundColor = "grey";
+                console.log(slideURIList);
                 const imageBlobs = [];
                 for (let i = 0; i < slideURIList.length; i++) {
                   browser.runtime.sendMessage({
                     "action": "downloadImage",
                     "imageURI": slideURIList[i]
-                  }, async function(response) {
+                  }, async function (response) {
                     const res = await fetch(response.blob);
                     const blob = await res.blob();
                     imageBlobs.push(blob);
+                    console.log(imageBlobs);
                     if (imageBlobs.length === slideURIList.length) {
                       const FileSaverSrc = chrome.runtime.getURL("assets/FileSaver.js");
                       const FileSaverLib = await import(FileSaverSrc);
@@ -104,17 +110,21 @@ export const internalPathFunctions = {
                       for (let i = 0; i < imageBlobs.length; i++) {
                         zip.file(`${videoTitle}_slide_${i + 1}.jpg`, imageBlobs[i]);
                       }
-                      zip.generateAsync({type:"blob"}).then(function(content) {
+                      zip.generateAsync({ type: "blob" }).then(function (content) {
                         saveAs(content, `${videoTitle}_slide.zip`);
                       });
+                      downloadButton.style.backgroundColor = "grey";
                     }
                   });
                 }
               }
             }
             document.querySelector('.mvtopba > label:last-of-type').after(labelElement);
+          })
+            
           });
-        })
+
+        
       }
 
 		// 고유 번호를 받을 때까지 대기

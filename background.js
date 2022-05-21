@@ -20,7 +20,7 @@ function asyncGetData(request) {
 function asyncGetSlide(request) {
   return new Promise((resolve, reject) => {
     const _xhr = new XMLHttpRequest;
-    _xhr.open("GET", request.slideListURI);
+    _xhr.open("GET", request);
     _xhr.onload = () => {
       if (_xhr.status == 200) {
         resolve(_xhr);
@@ -68,14 +68,18 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   } else if (request.action === 'downloadSlide') {
     (async () => {
-      const oSerializer = new XMLSerializer();
-      try {
-        const xhr = await asyncGetSlide(request);
-        const sXML = oSerializer.serializeToString(xhr.responseXML);
-        sendResponse({xhr: sXML});
-      } catch (e) {
-        sendResponse({xhr: ""});
+      const sXMLs = [];
+      for (let i = 0; i < request.slideListURIs.length; i++) {
+        try {
+          const oSerializer = new XMLSerializer();
+          const xhr = await asyncGetSlide(request.slideListURIs[i]);
+          const sXML = oSerializer.serializeToString(xhr.responseXML);
+          sXMLs.push(sXML);
+        } catch (e) {
+          console.log(e);
+        }
       }
+      sendResponse({ xhrs: sXMLs });
     })();
     return true;
   } else if (request.action === 'downloadImage') {
