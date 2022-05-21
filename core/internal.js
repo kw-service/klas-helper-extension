@@ -16,7 +16,7 @@ export const internalPathFunctions = {
 				}, function (response) {
           const oParser = new DOMParser();        
           const documentXML  = oParser.parseFromString(response.xhr, "text/xml");
-          const webURI = documentXML.getElementsByTagName("web")[0].innerHTML;
+          const webURI = documentXML.getElementsByTagName("content_uri")[0].innerHTML.replace(/(<!\[CDATA\[)|(\]\]\>)/g, '');
           const storyIDs = [...documentXML.getElementsByTagName("story")].map(story => story.getAttribute("id"));
           const videoTitle = documentXML.getElementsByTagName("title")[0].innerHTML.replace(/(<!\[CDATA\[)|(\]\]\>)|([^a-zA-z0-9 ()ㄱ-ㅎㅏ-ㅣ가-힣]+)/g, '');
           const slideListURIs = [...storyIDs].map(storyID => `${webURI}/slide_list_${storyID}.xml?_=${Date.now()}`);
@@ -32,7 +32,6 @@ export const internalPathFunctions = {
             const mediaURI = documentXML.getElementsByTagName('media_uri')[0].innerHTML;
             const videoNames = documentXML.getElementsByTagName('main_media');
             const videoTypes = documentXML.getElementsByTagName('story_type');
-            console.log(videoNames[0].innerHTML);
             for (let i = 0; i < videoNames.length; i++) {
               videoList.push({
                 url: mediaURI.replace('[MEDIA_FILE]', videoNames[i].innerHTML),
@@ -89,7 +88,7 @@ export const internalPathFunctions = {
               // 한번만 다운로드 가능
               const downloadButton = document.getElementsByClassName("download-slide")[0]
               if (downloadButton.style.backgroundColor === "brown") {
-                console.log(slideURIList);
+
                 const imageBlobs = [];
                 for (let i = 0; i < slideURIList.length; i++) {
                   browser.runtime.sendMessage({
@@ -99,7 +98,7 @@ export const internalPathFunctions = {
                     const res = await fetch(response.blob);
                     const blob = await res.blob();
                     imageBlobs.push(blob);
-                    console.log(imageBlobs);
+
                     if (imageBlobs.length === slideURIList.length) {
                       const FileSaverSrc = chrome.runtime.getURL("assets/FileSaver.js");
                       const FileSaverLib = await import(FileSaverSrc);
@@ -182,7 +181,6 @@ export const internalPathFunctions = {
       const element = document.getElementsByClassName("form-control")[0]
       try {
         browser.storage.sync.get(null, function(items) {
-          console.log(items);
           if (items.timeTableIdx === undefined) {
             browser.storage.sync.set({"timeTableIdx": 0});
           }
