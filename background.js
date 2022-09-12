@@ -81,7 +81,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 browser.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   if (msg.action === "updateIcon") {
       if (msg.value === "disabled") {
-        browser.browserAction.setIcon({
+        browser.action.setIcon({
           path : {
             "16": "/assets/icon_disabled_16x16.png",
             "32": "/assets/icon_disabled_32x32.png",
@@ -90,7 +90,7 @@ browser.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
           }
         });
       } else {
-        browser.browserAction.setIcon({
+        browser.action.setIcon({
           path : {
             "16": "/assets/icon_16x16.png",
             "32": "/assets/icon_32x32.png",
