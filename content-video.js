@@ -11,7 +11,7 @@ function jsCache(filePath) {
 }
 
 (async () => {
-  const src = chrome.runtime.getURL("core/internal-video.js");
+  const src = browser.runtime.getURL("core/internal-video.js");
   const scriptElement = document.createElement('script');
   scriptElement.src = src;
   document.body.appendChild(scriptElement);
