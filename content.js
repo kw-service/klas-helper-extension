@@ -11,7 +11,7 @@ function jsCache(filePath) {
 }
 
 (async () => {
-  const src = chrome.runtime.getURL("core/internal.js");
+  const src = browser.runtime.getURL("core/internal.js");
   const content = await import(src);
   internalPathFunctions = content.internalPathFunctions;
 

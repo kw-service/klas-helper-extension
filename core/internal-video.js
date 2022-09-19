@@ -1,7 +1,4 @@
-if (typeof browser === "undefined") {
-  var browser = chrome;
-}
-let speed = 1
+var speed = 1
 var b = undefined;
 const buttonCss = {
   "float": "right",
@@ -15,9 +12,9 @@ const buttonCss = {
   "margin-left": "5px",
 }
 const changeVideoSpeed = (speed) => {
-  speed = isNaN(speed) ? 1 : speed
+  speed = speed ? speed : 1
   b._eventTarget.fire(VCPlayControllerEvent.CHANGE_PLAYBACK_RATE, Number(speed));
-  $(".vc-pctrl-playback-rate-toggle-btn").text("x " + speed.toFixed(1))
+  $(".vc-pctrl-playback-rate-toggle-btn").text("x " + speed.toFixed(2))
 }
 
 const renderVideoController = () => {
@@ -30,7 +27,7 @@ const renderVideoController = () => {
     
     console.log(cookieManager.getCookie(cookieManager.PLAYBACK_RATE))
     speed = Number(cookieManager.getCookie(CookieManager.PLAYBACK_RATE))
-    speed = isNaN(speed) ? 1 : speed
+    speed = speed ? speed : 1
     
     const $decreaseSpeed = $("<button class='vc-pctrl-playback-rate-decrease'>&lt</button>", {
       class: "vc-pctrl-playback-rate-setbox-btn",
@@ -40,8 +37,16 @@ const renderVideoController = () => {
     })
     $decreaseSpeed.css(buttonCss)
     $increaseSpeed.css(buttonCss)
-    $decreaseSpeed.click(() => { speed -= 0.1; changeVideoSpeed(speed) })
-    $increaseSpeed.click(() => { speed += 0.1; changeVideoSpeed(speed) })
+    $decreaseSpeed.click(() => { 
+      speed = Number(cookieManager.getCookie(CookieManager.PLAYBACK_RATE))
+      speed = speed ? speed : 1
+      speed -= 0.1; changeVideoSpeed(speed)
+    })
+    $increaseSpeed.click(() => {
+      speed = Number(cookieManager.getCookie(CookieManager.PLAYBACK_RATE))
+      speed = speed ? speed : 1
+      speed += 0.1; changeVideoSpeed(speed)
+    })
     
     $(".vc-pctrl-buttons-bar").append($increaseSpeed)
     $(".vc-pctrl-buttons-bar").append($decreaseSpeed)
