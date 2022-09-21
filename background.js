@@ -2,50 +2,33 @@ if (typeof browser === "undefined") {
   var browser = chrome;
 }
 
-function asyncGetData(request) {  
-  return new Promise((resolve, reject) =>{
-    const _xhr = new XMLHttpRequest;
-    _xhr.open("GET", 'https://kwcommons.kw.ac.kr/viewer/ssplayer/uniplayer_support/content.php?content_id=' + request.videoCode);
-    _xhr.onload = () => {
-        if (_xhr.status == 200) {
-          resolve(_xhr);
-        } else {
-          resolve("")
-        }
-    };
-    _xhr.send();
-  })     
+async function asyncGetXMLData(request) {  
+  const response = await fetch('https://kwcommons.kw.ac.kr/viewer/ssplayer/uniplayer_support/content.php?content_id=' + request.videoCode);
+  const data = await response.text();
+  if (response.status == 200) {
+    return data;
+  } else {
+    return "";
+  }
 }
 
-function asyncGetSlide(request) {
-  return new Promise((resolve, reject) => {
-    const _xhr = new XMLHttpRequest;
-    _xhr.open("GET", request);
-    _xhr.onload = () => {
-      if (_xhr.status == 200) {
-        resolve(_xhr);
-      } else {
-        resolve("")
-      }
-    };
-    _xhr.send();
-  })
+async function asyncGetSlide(request) {
+  const response = await fetch(request);
+  const data = await response.text();
+  if (response.status == 200) {
+    return data;
+  } else {
+    return "";
+  }
 }
 
-function asyncGetImage(imageURI) {
-  return new Promise((resolve, reject) => {
-    const _xhr = new XMLHttpRequest;
-    _xhr.responseType = 'blob';
-    _xhr.open("GET", imageURI);
-    _xhr.onload = () => {
-      if (_xhr.status == 200) {
-        resolve(_xhr);
-      } else {
-        resolve("")
-      }
-    };
-    _xhr.send();
-  })
+async function asyncGetImage(imageURI) {
+  const response = await fetch(imageURI);
+  const blob = await response.blob({
+    type: 'image/jpeg'
+  });
+  const base64 = await blobToBase64(blob);
+  return base64;
 }
 
 function blobToBase64(blob) {
@@ -60,10 +43,8 @@ function blobToBase64(blob) {
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'downloadVideo') {
     (async () => {
-      const oSerializer = new XMLSerializer();
-      const xhr = await asyncGetData(request);
-      const sXML = oSerializer.serializeToString(xhr.responseXML);
-      sendResponse({xhr: sXML});
+      const xhr = await asyncGetXMLData(request);
+      sendResponse({xhr: xhr});
     })();
     return true;
   } else if (request.action === 'downloadSlide') {
@@ -71,10 +52,8 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
       const sXMLs = [];
       for (let i = 0; i < request.slideListURIs.length; i++) {
         try {
-          const oSerializer = new XMLSerializer();
           const xhr = await asyncGetSlide(request.slideListURIs[i]);
-          const sXML = oSerializer.serializeToString(xhr.responseXML);
-          sXMLs.push(sXML);
+          sXMLs.push(xhr);
         } catch (e) {
           console.log(e);
         }
@@ -85,11 +64,8 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.action === 'downloadImage') {
     (async () => {
       try {
-        const xhr = await asyncGetImage(request.imageURI);
-        const blob = new Blob([xhr.response], { type: 'image/jpeg' });
-        // blob으로 넘겨주면 객체가 사라져서 Base64로 인코딩 후 건네줍니다.
-        const b64 = await blobToBase64(blob);
-        sendResponse({ blob: b64 });
+        const xhrB64 = await asyncGetImage(request.imageURI);
+        sendResponse({ blob: xhrB64 });
       } catch (e) {
         console.log(e);
         sendResponse({ blob: "" });
@@ -105,7 +81,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 browser.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   if (msg.action === "updateIcon") {
       if (msg.value === "disabled") {
-        browser.browserAction.setIcon({
+        browser.action.setIcon({
           path : {
             "16": "/assets/icon_disabled_16x16.png",
             "32": "/assets/icon_disabled_32x32.png",
@@ -114,7 +90,7 @@ browser.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
           }
         });
       } else {
-        browser.browserAction.setIcon({
+        browser.action.setIcon({
           path : {
             "16": "/assets/icon_16x16.png",
             "32": "/assets/icon_32x32.png",

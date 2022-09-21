@@ -14,9 +14,7 @@ function jsCache(filePath) {
   const src = browser.runtime.getURL("core/internal.js");
   const content = await import(src);
   internalPathFunctions = content.internalPathFunctions;
-  setTimeout(() => {
-    
-  })
+
   // 크롬 sync 스토리지 이용해 체크 여부 확인
   try {
     browser.storage.sync.get("currentState", function(items) {
@@ -67,56 +65,33 @@ async function main() {
 	const scriptElement = document.createElement('script');
   // let jsfile = 'https://nbsp1221.github.io/klas-helper/dist/main-ext.js';
   let jsfile = browser.runtime.getURL("core/main-ext.js");
-  await browser.storage.sync.get(null, function(items) {
-    // Toggle button not supprted in Firefox
-    if (items !== undefined) {
-      if (items.useBeta === undefined || items.useBeta === "OFF") {
-        browser.storage.sync.set({"useBeta": "OFF"});
-      }
-      if (items.useBeta === "ON") {
-        jsfile = 'https://klas-helper.github.io/klas-helper/dist/main-ext.js';
-      }
-    }
-  });
-
-  await browser.storage.sync.get(null, function(items) {
-    // chrome namespace not supported
-    if (items !== undefined) {
-      if (items.useDebug === undefined || items.useDebug === "OFF") {
-        browser.storage.sync.set({"useDebug": "OFF"});
-      }
-      else if (items.useDebug === "ON") {
-        jsfile = 'http://localhost:8080/main-ext.js';
-      }
-    }
     
-    scriptElement.src = jsCache(jsfile);
-    document.head.appendChild(scriptElement);
-    let useTempermonkey = false;
-    for (let i = 0; i < document.head.children.length; i++) {
-      if (document.head.children[i].src !== undefined) {
-        if (document.head.children[i].src.includes("https://klas-helper.github.io/klas-helper/dist/main.js")) {
-          console.log("Detect tempermonkey script!");
-          useTempermonkey = true;
-          break;
-        }
+  scriptElement.src = jsCache(jsfile);
+  document.head.appendChild(scriptElement);
+  let useTempermonkey = false;
+  for (let i = 0; i < document.head.children.length; i++) {
+    if (document.head.children[i].src !== undefined) {
+      if (document.head.children[i].src.includes("https://klas-helper.github.io/klas-helper/dist/main.js")) {
+        console.log("Detect tempermonkey script!");
+        useTempermonkey = true;
+        break;
       }
     }
+  }
 
-    if (!useTempermonkey) {
-      document.head.appendChild(scriptElement);
-      for (const path in internalPathFunctions) {
-        if (path === location.pathname) {
-          internalPathFunctions[path]();
-        }
+  if (!useTempermonkey) {
+    document.head.appendChild(scriptElement);
+    for (const path in internalPathFunctions) {
+      if (path === location.pathname) {
+        internalPathFunctions[path]();
       }
     }
+  }
     
   
     // 일정 시간이 지날 경우 타이머 해제
-    setTimeout(() => {
-      clearInterval(waitTimer);
-    }, 1500);
-  });
+  setTimeout(() => {
+    clearInterval(waitTimer);
+  }, 1500);
 }
 

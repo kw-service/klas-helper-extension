@@ -36,15 +36,6 @@ browser.storage.sync.get(null, function(items) {
         activeBtn.checked = true;
     }
 
-    // 디버그 여부
-    if (items.useDebug === undefined) {
-        browser.storage.sync.set({useDebug: "OFF"});
-    } else if (items.useDebug === "OFF") {
-        debugBtn.checked = false;
-    } else if (items.useDebug === "ON") {
-        debugBtn.checked = true;
-    }
-
     // 다크테마 여부
     if (items.useDark === undefined) {
         browser.storage.sync.set({useDark: "OFF"});
@@ -52,15 +43,6 @@ browser.storage.sync.get(null, function(items) {
         darkBtn.checked = false;
     } else if (items.useDark === "ON") {
         darkBtn.checked = true;
-    }
-
-    // 베타버전 여부
-    if (items.useBeta === undefined) {
-        browser.storage.sync.set({useBeta: "OFF"});
-    } else if (items.useBeta === "OFF") {
-        betaBtn.checked = false;
-    } else if (items.useBeta === "ON") {
-        betaBtn.checked = true;
     }
 });
 
@@ -81,13 +63,6 @@ activeBtn.onclick = function() {
     }
 }
 
-debugBtn.onclick = function() {
-    if (debugBtn.checked) {
-        browser.storage.sync.set({useDebug: "ON"});
-    } else {
-        browser.storage.sync.set({useDebug: "OFF"});
-    }
-}
 
 darkBtn.onclick = function() {
     if (darkBtn.checked) {
@@ -97,11 +72,3 @@ darkBtn.onclick = function() {
     }
 }
 
-
-betaBtn.onclick = function() {
-    if (betaBtn.checked) {
-        browser.storage.sync.set({useBeta: "ON"});
-    } else {
-        browser.storage.sync.set({useBeta: "OFF"});
-    }
-}

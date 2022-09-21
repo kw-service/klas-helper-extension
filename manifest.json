@@ -1,7 +1,7 @@
 {
   "name": "KLAS Helper",
-  "manifest_version": 2,
-  "version": "1.2.0.1",
+  "manifest_version": 3,
+  "version": "2.0.0.0",
   "description": "광운대학교 KLAS Helper 확장 프로그램",
   "homepage_url": "https://github.com/klas-helper/klas-helper-extension",
   "permissions": [
@@ -9,7 +9,7 @@
     "*://kwcommons.kw.ac.kr/*",
     "storage"
 	],
-  "browser_action": {
+  "action": {
     "default_popup": "index.html",
     "default_icon": {
       "16": "./assets/icon_16x16.png",
@@ -39,16 +39,17 @@
     "run_at": "document_end"
   }],
   "web_accessible_resources": [
-    "core/internal.js",
-    "core/internal-video.js",
-    "core/main-ext.js",
-    "assets/jszip.min.js",
-    "assets/FileSaver.js",
-    "dark.css"
+    {
+      "resources": ["core/internal.js", "core/main-ext.js", "assets/jszip.min.js", "assets/FileSaver.js", "dark.css"],
+      "matches": ["https://klas.kw.ac.kr/*", "https://kwcommons.kw.ac.kr/*"]
+    },
+    {
+      "resources": ["core/internal-video.js"],
+      "matches": ["https://kwcommons.kw.ac.kr/*"]
+    }
   ],
   "background": {
-      "scripts": ["background.js"],
-      "persistent": false
+    "service_worker": "background.js"
   },
   "browser_specific_settings": {
     "gecko": {
