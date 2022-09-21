@@ -72,3 +72,6 @@ darkBtn.onclick = function() {
     }
 }
 
+const manifestData = browser.runtime.getManifest();
+const versionElement = document.querySelector(".version");
+versionElement.innerText = `v${manifestData.version}`;
