@@ -1,12 +1,10 @@
 {
   "name": "KLAS Helper",
   "manifest_version": 3,
-  "version": "2.0.1.0",
+  "version": "2.0.1.1",
   "description": "광운대학교 KLAS Helper 확장 프로그램",
   "homepage_url": "https://github.com/klas-helper/klas-helper-extension",
   "permissions": [
-    "*://klas.kw.ac.kr/*",
-    "*://kwcommons.kw.ac.kr/*",
     "storage"
 	],
   "action": {
@@ -40,7 +38,8 @@
   }],
   "web_accessible_resources": [
     {
-      "resources": ["core/internal.js", "core/main-ext.js", "assets/jszip.min.js", "assets/FileSaver.js", "dark.css"],
+      "resources": ["core/internal.js", "core/main-ext.js", "assets/jszip.min.js", "assets/FileSaver.js",
+        "assets/Chart.min.js", "assets/jquery.modal.min.js", "assets/jquery.modal.min.css", "dark.css"],
       "matches": ["https://klas.kw.ac.kr/*", "https://kwcommons.kw.ac.kr/*"]
     },
     {
