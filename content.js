@@ -62,12 +62,31 @@ async function main() {
   
 	// 메인 파일 삽입
 	// 업데이트 시 즉각적으로 업데이트를 반영하기 위해 이러한 방식을 사용함
-	const scriptElement = document.createElement('script');
+	const scriptElements = []
   // let jsfile = 'https://nbsp1221.github.io/klas-helper/dist/main-ext.js';
   let jsfile = browser.runtime.getURL("core/main-ext.js");
-    
-  scriptElement.src = jsCache(jsfile);
-  document.head.appendChild(scriptElement);
+  let ChartJs = browser.runtime.getURL("assets/Chart.min.js");
+  let jQueryModalJs = browser.runtime.getURL("assets/jquery.modal.min.js");
+  let jQueryModalCss = browser.runtime.getURL("assets/jquery.modal.min.css");
+
+  let jsScriptElements = document.createElement('script');
+  let chartJsScriptElements = document.createElement('script');
+  let jQueryModalJsScriptElements = document.createElement('script');
+  let jQueryModalCssScriptElements = document.createElement('link');
+
+  jsScriptElements.src = jsCache(jsfile);
+  chartJsScriptElements.src = jsCache(ChartJs);
+  jQueryModalJsScriptElements.src = jsCache(jQueryModalJs);
+  jQueryModalCssScriptElements.href = jsCache(jQueryModalCss);
+  jQueryModalCssScriptElements.rel = "stylesheet";
+  jQueryModalCssScriptElements.type = "text/css";
+
+  scriptElements.push(jsScriptElements);
+  scriptElements.push(chartJsScriptElements);
+  scriptElements.push(jQueryModalJsScriptElements);
+  scriptElements.push(jQueryModalCssScriptElements);
+
+  // document.head.appendChild(scriptElement);
   let useTempermonkey = false;
   for (let i = 0; i < document.head.children.length; i++) {
     if (document.head.children[i].src !== undefined) {
@@ -80,7 +99,10 @@ async function main() {
   }
 
   if (!useTempermonkey) {
-    document.head.appendChild(scriptElement);
+    for (const element in scriptElements) {
+      document.head.appendChild(scriptElements[element]);
+    }
+    // document.head.appendChild(scriptElement);
     for (const path in internalPathFunctions) {
       if (path === location.pathname) {
         internalPathFunctions[path]();
