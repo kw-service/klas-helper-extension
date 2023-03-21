@@ -108,11 +108,13 @@ canvas {
     color: var(--custom-text-white-secondary) !important;
 }
 #yes-deadline * {
-    color: var(--custom-text-white-secondary) !important;
+    color: var(--custom-text-white-secondary);
 }
 #appSelectSubj .aC {
     color: var(--custom-text-white-secondary) !important;
 }
+
+
 
 /* 하위 컴포넌트 */
 .card {
@@ -141,4 +143,22 @@ canvas {
 /* 버튼 */
 .btn-gray {
     border: 1px solid #fff !important;
+}
+
+.remain-none, .remain-none * {
+    color: #ABFA8E !important;
+}
+
+.remain-today, .remain-today * {
+    color: #FF7371 !important;
+}
+
+.remain-hour, .remain-hour * {
+    color: #FF7371 !important;
+    font-weight: bolder !important;
+}
+
+.remain-soon, .remain-soon * {
+    color: #FF7371 !important;
+    font-weight: bold !important;
 }
