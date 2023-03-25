@@ -10,7 +10,7 @@
   ],
   "ignorePatterns": [
     "node_modules/",
-    "dist/"
+    "core/"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
