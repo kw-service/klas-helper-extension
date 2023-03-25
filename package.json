@@ -1,0 +1,45 @@
+{
+  "name": "klas-helper",
+  "version": "2.5.3",
+  "description": "광운대학교 KLAS 사이트에 편리한 기능을 추가할 수 있는 유저 스크립트",
+  "main": "src/main.js",
+  "scripts": {
+    "dev:build": "cross-env NODE_ENV=development webpack --config config/webpack.config.ts --config-name userscript --progress",
+    "dev:start": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.config.ts --config-name main --host 0.0.0.0 --watch-poll",
+    "dev": "npm run dev:build && npm run dev:start",
+    "ext:build": "cross-env NODE_ENV=development webpack --config config/webpack.config.ts --config-name userscript --progress",
+    "ext:start": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.config.ts --config-name main-ext --host 0.0.0.0 --watch-poll",
+    "ext": "npm run ext:build && npm run ext:start",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "build": "cross-env NODE_ENV=production webpack --config config/webpack.config.ts --progress"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/klas-helper/klas-helper.git"
+  },
+  "author": "nbsp1221",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/klas-halper/klas-helper/issues"
+  },
+  "homepage": "https://github.com/klas-halper/klas-helper#readme",
+  "devDependencies": {
+    "@babel/core": "^7.11.4",
+    "@babel/preset-env": "^7.11.0",
+    "@types/node": "^14.6.2",
+    "@types/webpack": "^4.41.21",
+    "@typescript-eslint/eslint-plugin": "^3.10.1",
+    "@typescript-eslint/parser": "^3.10.1",
+    "babel-loader": "^8.1.0",
+    "cross-env": "^7.0.2",
+    "eslint": "^7.7.0",
+    "ts-loader": "^8.0.3",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.2",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-userscript": "^2.5.5"
+  }
+}
