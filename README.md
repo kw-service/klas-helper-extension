@@ -1,5 +1,7 @@
 # KLAS Helper extension
 
+[![gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square)](https://gitmoji.dev)
+
 쉽고 빠르게 광운대학교 KLAS 사이트에 편리한 기능을 추가합니다. 
 
 * 이 확장 프로그램은 nbsp1221님의 [KLAS Helper](https://github.com/klas-helper/klas-helper) 를 기반으로 작성한 프로그램입니다.
