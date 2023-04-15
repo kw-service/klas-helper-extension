@@ -1,0 +1,27 @@
+{
+  "name": "klas-helper",
+  "private": true,
+  "scripts": {
+    "build": "export NODE_OPTIONS=--openssl-legacy-provider && cross-env NODE_ENV=production webpack --config config/webpack.config.ts --progress",
+    "dev": "export NODE_OPTIONS=--openssl-legacy-provider && npm run env && cross-env NODE_ENV=development webpack-dev-server --config config/webpack.config.ts --host 0.0.0.0 --watch-poll",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.4",
+    "@babel/preset-env": "^7.11.0",
+    "@types/node": "^14.6.2",
+    "@types/webpack": "^4.41.21",
+    "@typescript-eslint/eslint-plugin": "^3.10.1",
+    "@typescript-eslint/parser": "^3.10.1",
+    "babel-loader": "^8.1.0",
+    "cross-env": "^7.0.2",
+    "eslint": "^7.7.0",
+    "ts-loader": "^8.0.3",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.2",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
