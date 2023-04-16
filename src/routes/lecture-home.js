@@ -4,21 +4,21 @@
  */
 
 // 강의 묻고답하기, 강의 공지사항 추가
-const addBoard = async() => {
+const addBoard = async () => {
   const selectedSubj = $("input[name='selectedSubj']").val();
-  const questionBoardUid = $("a[onclick*='BoardQnaListStdPage.do']").attr("onclick").split("linkUrl('/std/lis/sport/")[1].split("/")[0];
+  const questionBoardUid = $("a[onclick*='BoardQnaListStdPage.do']").attr('onclick').split("linkUrl('/std/lis/sport/")[1].split('/')[0];
   const selectedYearhakgi = $("input[name='selectedYearhakgi']").val();
   let boardCount = 0;
   let isNew = false;
   const response = await axios.post(`/std/lis/sport/${questionBoardUid}/BoardStdList.do`, {
-    "cmd": null,
-    "pageInit": true,
-    "selectYearhakgi": selectedYearhakgi,
-    "selectSubj": selectedSubj,
-    "selectChangeYn": "Y",
-    "searchCondition": "ALL",
-    "searchKeyword": "",
-    "currentPage": 0,
+    'cmd': null,
+    'pageInit': true,
+    'selectYearhakgi': selectedYearhakgi,
+    'selectSubj': selectedSubj,
+    'selectChangeYn': 'Y',
+    'searchCondition': 'ALL',
+    'searchKeyword': '',
+    'currentPage': 0,
   });
   const data = response.data;
   const totalPages = data.page.totalPages;
@@ -30,44 +30,44 @@ const addBoard = async() => {
   }
   for (let i = 0; i < totalPages; i++) {
     const response = await axios.post(`/std/lis/sport/${questionBoardUid}/BoardStdList.do`, {
-      "cmd": null,
-      "pageInit": true,
-      "selectYearhakgi": selectedYearhakgi,
-      "selectSubj": selectedSubj,
-      "selectChangeYn": "Y",
-      "searchCondition": "ALL",
-      "searchKeyword": "",
-      "currentPage": i,
-    })
+      'cmd': null,
+      'pageInit': true,
+      'selectYearhakgi': selectedYearhakgi,
+      'selectSubj': selectedSubj,
+      'selectChangeYn': 'Y',
+      'searchCondition': 'ALL',
+      'searchKeyword': '',
+      'currentPage': i,
+    });
     const data = response.data;
     boardCount += data.list.length;
   }
-  if ($(".custom-boardcount").length > 0) {
-    $(".custom-boardcount").text(boardCount);
-  } else {
-    $($(".subjectpresent")[0]).append(`
+  if ($('.custom-boardcount').length > 0) {
+    $('.custom-boardcount').text(boardCount);
+  }
+  else {
+    $($('.subjectpresent')[0]).append(`
       <li><a href="#" onclick="linkUrl('/std/lis/sport/573f918c23984ae8a88c398051bb1263/BoardQnaListStdPage.do');">강의 묻고답하기${
-        isNew ? ` <img v-if="prjctNewCnt > 0" src="/assets/modules/std/images/common/icon-new.png"> ` : ""
-      } <!----><span class="oval custom-boardcount">${boardCount}</span></a></li>
+  isNew ? ' <img v-if="prjctNewCnt > 0" src="/assets/modules/std/images/common/icon-new.png"> ' : ''
+} <!----><span class="oval custom-boardcount">${boardCount}</span></a></li>
     `);
   }
 };
 
 // 강의계획서 조회 버튼 추가
-const addLecturePlan = async() => {
-  const redirectLectureHandler = async() => {
+const addLecturePlan = async () => {
+  const redirectLectureHandler = async () => {
     const selectedSubj = $("input[name='selectedSubj']").val();
     window.open('https://klas.kw.ac.kr/std/cps/atnlc/popup/LectrePlanStdView.do?selectSubj=' + selectedSubj, '', 'width=1000, height=800, scrollbars=yes, title=강의계획서 조회');
   };
-  const lectureElem = $(`<span class="subjectLectureInfo">강의계획서 조회</span>`);
+  const lectureElem = $('<span class="subjectLectureInfo">강의계획서 조회</span>');
   // set style
   lectureElem.css({
-    "margin-left": "15px",
+    'margin-left': '15px',
   });
   lectureElem.click(redirectLectureHandler);
-  $(".subtitle").append(lectureElem);
+  $('.subtitle').append(lectureElem);
 };
-
 
 export default () => {
   // 인증 팝업 무시
@@ -116,11 +116,11 @@ export default () => {
 
   // 강의 숨기기 버튼에 이벤트 설정
   $('.btn-clean').click(() => {
-    if (appModule.origin == undefined) {
+    if (appModule.origin === undefined) {
       appModule.origin = appModule.cntntList;
       let copy = [];
-      appModule.cntntList.forEach(item => {
-        if (item.prog != '100') copy.push(item);
+      appModule.cntntList.forEach((item) => {
+        if (item.prog !== '100') copy.push(item);
       });
       appModule.cntntList = copy;
     }
@@ -138,9 +138,8 @@ export default () => {
     appModule.origin = undefined;
     $('.btn-green').toggleClass('btn-green').toggleClass('btn-gray');
     setTimeout(addBoard, 500);
-    
   });
 
   addLecturePlan();
-  setTimeout(addBoard, 500); 
+  setTimeout(addBoard, 500);
 };

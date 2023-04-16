@@ -30,12 +30,12 @@ export default () => {
       fontWeight: 'bold',
       padding: '2px 4px',
       position: 'relative',
-      top: '-1px'
+      top: '-1px',
     });
 
     $('#modal-keyboard-shortcut strong').css({
       position: 'relative',
-      top: '1px'
+      top: '1px',
     });
 
     $('.mvtopba > label:last-of-type').after(`

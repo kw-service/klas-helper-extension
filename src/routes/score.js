@@ -4,10 +4,10 @@
  */
 
 import {
-  addListenerByTimer
+  addListenerByTimer,
 } from '../utils/dom';
 import {
-  calculateGPA
+  calculateGPA,
 } from '../utils/score';
 
 const handleCalculateGPA = () => {
@@ -23,8 +23,8 @@ const handleCalculateGPA = () => {
         name: value.gwamokKname,
         classification: value.codeName1.trim(),
         credit: parseInt(value.hakjumNum, 10),
-        grade: value.getGrade.trim().split(' ')[0]
-      }))
+        grade: value.getGrade.trim().split(' ')[0],
+      })),
     });
   }
 
@@ -95,35 +95,35 @@ const handleCalculateGPA = () => {
     new Chart(ctx, {
       type: 'line',
       data: {
-        labels: synthesisGPAs.map(value => value.name.split(' ')),
+        labels: synthesisGPAs.map((value) => value.name.split(' ')),
         datasets: [{
           label: '전공 평점',
-          data: synthesisGPAs.map(value => value.majorGPA.includeF),
+          data: synthesisGPAs.map((value) => value.majorGPA.includeF),
           borderColor: '#e74c3c',
           borderWidth: 1,
           fill: false,
           lineTension: 0,
           pointBackgroundColor: 'white',
-          pointRadius: 5
+          pointRadius: 5,
         }, {
           label: '전공 외 평점',
-          data: synthesisGPAs.map(value => value.nonMajorGPA.includeF),
+          data: synthesisGPAs.map((value) => value.nonMajorGPA.includeF),
           borderColor: '#2980b9',
           borderWidth: 1,
           fill: false,
           lineTension: 0,
           pointBackgroundColor: 'white',
-          pointRadius: 5
+          pointRadius: 5,
         }, {
           label: '평균 평점',
-          data: synthesisGPAs.map(value => value.averageGPA.includeF),
+          data: synthesisGPAs.map((value) => value.averageGPA.includeF),
           borderColor: '#bdc3c7',
           borderWidth: 2,
           fill: false,
           lineTension: 0,
           pointBackgroundColor: 'white',
-          pointRadius: 5
-        }]
+          pointRadius: 5,
+        }],
       },
       options: {
         scales: {
@@ -131,19 +131,19 @@ const handleCalculateGPA = () => {
             ticks: {
               suggestedMin: 2,
               suggestedMax: 4.5,
-              stepSite: 0.5
-            }
-          }]
+              stepSite: 0.5,
+            },
+          }],
         },
         tooltips: {
           callbacks: {
             title: (tooltipItem) => {
               const xLabel = tooltipItem[0].xLabel;
               return xLabel[0] + ' ' + xLabel[1];
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     });
   }
 };

@@ -30,7 +30,7 @@ export default () => {
   };
 
   // 엔터로 강의 계획서 검색
-  $('table:nth-of-type(1) input[type="text"]').keydown(event => {
+  $('table:nth-of-type(1) input[type="text"]').keydown((event) => {
     if (event.keyCode === 13) appModule.getSearch();
   });
 

@@ -26,5 +26,5 @@ export default {
   '/std/cps/inqire/ToeicStdPage.do': handleCalculateToeic,
   '/std/cps/atnlc/TimetableStdPage.do': handleTimeTable,
   '/usr/cmn/login/LoginForm.do': handleLogin,
-  '*': handleRootHomepage
+  '*': handleRootHomepage,
 };

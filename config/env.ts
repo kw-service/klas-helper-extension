@@ -1,11 +1,7 @@
 if (
-  process.env.NODE_ENV !== 'production' &&
-  process.env.NODE_ENV !== 'development' &&
-  process.env.NODE_ENV !== 'test'
+  process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'test'
 ) {
-  throw new Error(
-    'The NODE_ENV environment variable is required but was not specified.'
-  );
+  throw new Error('The NODE_ENV environment variable is required but was not specified.');
 }
 
 export const isEnvProduction = process.env.NODE_ENV === 'production';
@@ -17,7 +13,7 @@ interface Env {
 }
 
 const env: Env = {
-  NODE_ENV: process.env.NODE_ENV
+  NODE_ENV: process.env.NODE_ENV,
 };
 
 export default env;

@@ -14,7 +14,7 @@ const paths: Paths = {
   appDev: resolveApp('dev'),
   appDist: resolveApp('core'),
   appSrc: resolveApp('src'),
-  appExtMain: resolveApp('src/main-ext.js')
+  appExtMain: resolveApp('src/main-ext.js'),
 };
 
 export default paths;

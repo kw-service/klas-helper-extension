@@ -1,5 +1,5 @@
 import {
-  floorFixed
+  floorFixed,
 } from './math';
 
 export type Classification = '전필' | '전선' | '기필' | '기선' | '교필' | '교선' | '일선';
@@ -46,8 +46,8 @@ export const gradeToScore = (grade: Grade): number => {
     case 'C0': return 2.0;
     case 'D+': return 1.5;
     case 'D0': return 1.0;
-    case 'F':  return 0;
-    case 'P':  return 0;
+    case 'F': return 0;
+    case 'P': return 0;
     case 'NP': return 0;
     default: throw new Error('`grade` is unexpected value.');
   }
@@ -58,25 +58,23 @@ export const calculateGPA = (semesters: Semester[]): SynthesisGPA[] => {
   const averageScoreDatas: number[] = Array(13).fill(0);
 
   const pushToSynthesisGPAs = (name: string, scoreDatas: number[]): void => {
-    const stringScoreDatas = scoreDatas.map((value, index) =>
-      value ? (index === 0 ? value.toString() : floorFixed(value)) : '-'
-    );
+    const stringScoreDatas = scoreDatas.map((value, index) => value ? (index === 0 ? value.toString() : floorFixed(value)) : '-');
 
     synthesisGPAs.push({
-      name: name,
+      name,
       credit: stringScoreDatas[0],
       majorGPA: {
         includeF: stringScoreDatas[1],
-        excludeF: stringScoreDatas[3]
+        excludeF: stringScoreDatas[3],
       },
       nonMajorGPA: {
         includeF: stringScoreDatas[5],
-        excludeF: stringScoreDatas[7]
+        excludeF: stringScoreDatas[7],
       },
       averageGPA: {
         includeF: stringScoreDatas[9],
-        excludeF: stringScoreDatas[11]
-      }
+        excludeF: stringScoreDatas[11],
+      },
     });
   };
 
@@ -97,19 +95,19 @@ export const calculateGPA = (semesters: Semester[]): SynthesisGPA[] => {
       const isIncludeF = checkIncludeF(grade);
       const isExcludeF = checkExcludeF(grade);
 
-      previous[0] += isPass ? credit : 0;                                         // 취득 학점
-      previous[1] += isMajor && isIncludeF ? gradeToScore(grade) * credit : 0;    // 전공 총점 (F 포함)
-      previous[2] += isMajor && isIncludeF ? credit : 0;                          // 전공 취득 학점 (F 포함)
-      previous[3] += isMajor && isExcludeF ? gradeToScore(grade) * credit : 0;    // 전공 총점 (F 미포함)
-      previous[4] += isMajor && isExcludeF ? credit : 0;                          // 전공 취득 학점 (F 미포함)
-      previous[5] += !isMajor && isIncludeF ? gradeToScore(grade) * credit : 0;   // 전공 외 총점 (F 포함)
-      previous[6] += !isMajor && isIncludeF ? credit : 0;                         // 전공 외 취득 학점 (F 포함)
-      previous[7] += !isMajor && isExcludeF ? gradeToScore(grade) * credit : 0;   // 전공 외 총점 (F 미포함)
-      previous[8] += !isMajor && isExcludeF ? credit : 0;                         // 전공 외 취득 학점 (F 미포함)
-      previous[9] += isIncludeF ? gradeToScore(grade) * credit : 0;               // 전체 총점 (F 포함)
-      previous[10] += isIncludeF ? credit : 0;                                    // 전체 취득 학점 (F 포함)
-      previous[11] += isExcludeF ? gradeToScore(grade) * credit : 0;              // 전체 총점 (F 미포함)
-      previous[12] += isExcludeF ? credit : 0;                                    // 전체 취득 학점 (F 미포함)
+      previous[0] += isPass ? credit : 0; // 취득 학점
+      previous[1] += isMajor && isIncludeF ? gradeToScore(grade) * credit : 0; // 전공 총점 (F 포함)
+      previous[2] += isMajor && isIncludeF ? credit : 0; // 전공 취득 학점 (F 포함)
+      previous[3] += isMajor && isExcludeF ? gradeToScore(grade) * credit : 0; // 전공 총점 (F 미포함)
+      previous[4] += isMajor && isExcludeF ? credit : 0; // 전공 취득 학점 (F 미포함)
+      previous[5] += !isMajor && isIncludeF ? gradeToScore(grade) * credit : 0; // 전공 외 총점 (F 포함)
+      previous[6] += !isMajor && isIncludeF ? credit : 0; // 전공 외 취득 학점 (F 포함)
+      previous[7] += !isMajor && isExcludeF ? gradeToScore(grade) * credit : 0; // 전공 외 총점 (F 미포함)
+      previous[8] += !isMajor && isExcludeF ? credit : 0; // 전공 외 취득 학점 (F 미포함)
+      previous[9] += isIncludeF ? gradeToScore(grade) * credit : 0; // 전체 총점 (F 포함)
+      previous[10] += isIncludeF ? credit : 0; // 전체 취득 학점 (F 포함)
+      previous[11] += isExcludeF ? gradeToScore(grade) * credit : 0; // 전체 총점 (F 미포함)
+      previous[12] += isExcludeF ? credit : 0; // 전체 취득 학점 (F 미포함)
 
       return previous;
     }, Array(13).fill(0));

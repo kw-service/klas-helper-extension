@@ -4,7 +4,7 @@
  */
 
 import {
-  addListenerByTimer
+  addListenerByTimer,
 } from '../utils/dom';
 
 const handleCalculateToeic = () => {
@@ -16,13 +16,13 @@ const handleCalculateToeic = () => {
   const ieltsData = [];
   const tepsData = [];
   const languageData = [
-    { title: "TOEIC", borderColor:'#EB373D', data: toeicData, meta:["score1", "score2"] },
-    { title: "TOPEL", borderColor:'#22F0A9', data: topelData, meta:["score3"] },
-    { title: "TOPIK", borderColor:'#117FFF', data: topikData, meta:["scoreD"] },
-    { title: "TOEIC Speaking", borderColor:'#813BEB', data: toeicSpeakingData, meta:["score4"] },
-    { title: "OPIC", borderColor:'#FF2E92', data: opicData, meta:["score5"] },
-    { title: "IELTS", borderColor:'#37F05C', data: ieltsData, meta:["score6"] },
-    { title: "TEPS", borderColor:'#FF9864', data: tepsData, meta:["score7"] }
+    { title: 'TOEIC', borderColor: '#EB373D', data: toeicData, meta: ['score1', 'score2'] },
+    { title: 'TOPEL', borderColor: '#22F0A9', data: topelData, meta: ['score3'] },
+    { title: 'TOPIK', borderColor: '#117FFF', data: topikData, meta: ['scoreD'] },
+    { title: 'TOEIC Speaking', borderColor: '#813BEB', data: toeicSpeakingData, meta: ['score4'] },
+    { title: 'OPIC', borderColor: '#FF2E92', data: opicData, meta: ['score5'] },
+    { title: 'IELTS', borderColor: '#37F05C', data: ieltsData, meta: ['score6'] },
+    { title: 'TEPS', borderColor: '#FF9864', data: tepsData, meta: ['score7'] },
   ];
   const scoreDatas = appModule.$data.list;
   const chartSettings = {
@@ -30,7 +30,7 @@ const handleCalculateToeic = () => {
     fill: false,
     lineTension: 0,
     pointBackgroundColor: 'white',
-    pointRadius: 5
+    pointRadius: 5,
   };
 
   // 평점 계산을 위한 데이터 생성
@@ -38,7 +38,7 @@ const handleCalculateToeic = () => {
     const scoreData = scoreDatas[i];
     for (const language of languageData) {
       for (const metadata of language.meta) {
-        if (scoreData[metadata] && scoreData[metadata] !== "-") {
+        if (scoreData[metadata] && scoreData[metadata] !== '-') {
           language.data.push({
             testDate: scoreData.testDate,
             score: scoreData[metadata],
@@ -64,16 +64,16 @@ const handleCalculateToeic = () => {
     ctx.height = 80;
 
     new Chart(ctx, {
-      type: "line",
+      type: 'line',
       data: {
-        labels: languageItem.data.map(semester => semester.testDate),
+        labels: languageItem.data.map((semester) => semester.testDate),
         datasets: [{
           label: languageItem.title,
-          data: languageItem.data.map(semester => semester.score),
+          data: languageItem.data.map((semester) => semester.score),
           borderColor: languageItem.borderColor,
-          ...chartSettings
-        }
-        ]
+          ...chartSettings,
+        },
+        ],
       },
       options: {
         responsive: true,
@@ -81,7 +81,7 @@ const handleCalculateToeic = () => {
           mode: 'index',
           intersect: false,
         },
-      }
+      },
     });
   }
 };

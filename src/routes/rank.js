@@ -37,7 +37,7 @@ export default () => {
 
       const postDatas = {
         selectYearhakgi: year + ',' + semester,
-        selectChangeYn: 'Y'
+        selectChangeYn: 'Y',
       };
 
       promises.push(axios.post('/std/cps/inqire/StandStdList.do', postDatas));

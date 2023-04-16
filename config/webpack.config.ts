@@ -1,4 +1,4 @@
-import webpack from 'webpack';
+import type webpack from 'webpack';
 import { isEnvProduction } from './env';
 import paths from './paths';
 
@@ -7,7 +7,7 @@ const config: webpack.Configuration = {
   mode: isEnvProduction ? 'production' : 'development',
   target: 'web',
   resolve: {
-    extensions: ['.js', '.ts']
+    extensions: ['.js', '.ts'],
   },
   module: {
     rules: [
@@ -18,23 +18,23 @@ const config: webpack.Configuration = {
           options: {
             presets: [
               ['@babel/preset-env', {
-                targets: '> 1% in KR, not ie > 0'
-              }]
-            ]
-          }
-        }
+                targets: '> 1% in KR, not ie > 0',
+              }],
+            ],
+          },
+        },
       },
       {
         test: /\.ts$/,
         use: {
-          loader: 'ts-loader'
-        }
-      }
-    ]
+          loader: 'ts-loader',
+        },
+      },
+    ],
   },
   output: {
     filename: 'main-ext.js',
-    path: paths.appDist
+    path: paths.appDist,
   },
 };
 

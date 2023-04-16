@@ -1,6 +1,6 @@
 import routes from './routes';
 import {
-  insertLibrary
+  insertLibrary,
 } from './utils/dom';
 
 // 확장 프로그램은 load가 필요없습니다
@@ -21,7 +21,7 @@ import {
   if (Object.prototype.hasOwnProperty.call(routes, location.pathname)) {
     routes[location.pathname]();
   }
-  routes["*"]();
+  routes['*']();
 
   // KLAS Helper 사용 여부 문구 추가
   $('.navtxt').prepend(`
@@ -34,7 +34,7 @@ import {
   $('.btnup').css({
     bottom: '30px',
     position: 'fixed',
-    right: '30px'
+    right: '30px',
   });
 
   // 로그인 세션 유지

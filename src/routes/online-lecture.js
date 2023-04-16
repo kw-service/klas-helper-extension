@@ -80,7 +80,7 @@ export default () => {
     }
     else {
       appModule.listBackup = appModule.list;
-      appModule.list = appModule.list.filter(v => { if (v.prog !== 100) return v; });
+      appModule.list = appModule.list.filter((v) => { if (v.prog !== 100) return v; });
     }
 
     $('#btn-hide-lecture').toggleClass('btn-gray');
