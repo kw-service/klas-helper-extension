@@ -7,7 +7,7 @@
 const renewSession = () => {
   // Call extern function
   // The extern function defines in HTML
-  sessionExtensionCall();
+  sessionExtensionReq();
   return;
 };
 
