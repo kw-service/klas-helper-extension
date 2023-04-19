@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "seatonjiang.gitmoji-vscode",
+    "streetsidesoftware.code-spell-checker"
+  ]
+}
