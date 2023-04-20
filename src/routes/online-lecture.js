@@ -1,3 +1,5 @@
+import { bypassCertification } from '../functions/bypassCertification';
+
 /**
  * 페이지 이름: 온라인 강의 콘텐츠 보기
  * 페이지 주소: https://klas.kw.ac.kr/std/lis/evltn/OnlineCntntsStdPage.do
@@ -49,7 +51,7 @@ export default () => {
 
   // 2분 쿨타임 제거 버튼에 이벤트 설정
   $('#btn-cooltime').click(() => {
-    appModule.getLrnSttus = function () {
+    appModule.getLrnStdSttus = function () {
       axios.post('/std/lis/evltn/SelectLrnSttusStd.do', this.$data).then(function (response) {
         this.lrnSttus = response.data;
 
@@ -94,15 +96,5 @@ export default () => {
   });
 
   // 인증 팝업 무시
-  lrnCerti.certiCheck = function (grcode, subj, year, hakgi, bunban, module, lesson, oid, starting, contentsType, weeklyseq, weeklysubseq, width, height, today, sdate, edate, ptype, totalTime, prog, gubun) {
-    // console.log(grcode, subj, year, hakgi, bunban, module, lesson, oid, starting, contentsType, weeklyseq, weeklysubseq, width, height, today, sdate, edate, ptype, totalTime, prog, gubun);
-    this.grcode = grcode;
-    this.subj = subj;
-    this.weeklyseq = weeklyseq;
-    this.gubun = gubun;
-    axios.post('/std/lis/evltn/CertiStdCheck.do', this.$data)
-      .then(function () {
-        appModule.goViewCntnts(grcode, subj, year, hakgi, bunban, module, lesson, oid, starting, contentsType, weeklyseq, weeklysubseq, width, height, today, sdate, edate, ptype, totalTime, prog);
-      }.bind(this));
-  };
+  bypassCertification();
 };

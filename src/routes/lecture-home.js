@@ -1,3 +1,5 @@
+import { bypassCertification } from '../functions/bypassCertification';
+
 /**
  * 페이지 이름: 강의 종합
  * 페이지 주소: https://klas.kw.ac.kr/std/lis/evltn/LctrumHomeStdPage.do
@@ -71,17 +73,7 @@ const addLecturePlan = async () => {
 
 export default () => {
   // 인증 팝업 무시
-  lrnCerti.certiCheck = function (grcode, subj, year, hakgi, bunban, module, lesson, oid, starting, contentsType, weeklyseq, weeklysubseq, width, height, today, sdate, edate, ptype, totalTime, prog, gubun) {
-    // console.log(grcode, subj, year, hakgi, bunban, module, lesson, oid, starting, contentsType, weeklyseq, weeklysubseq, width, height, today, sdate, edate, ptype, totalTime, prog, gubun);
-    this.grcode = grcode;
-    this.subj = subj;
-    this.weeklyseq = weeklyseq;
-    this.gubun = gubun;
-    axios.post('/std/lis/evltn/CertiStdCheck.do', this.$data)
-      .then(function () {
-        appModule.goViewCntnts(grcode, subj, year, hakgi, bunban, module, lesson, oid, starting, contentsType, weeklyseq, weeklysubseq, width, height, today, sdate, edate, ptype, totalTime, prog);
-      }.bind(this));
-  };
+  bypassCertification();
 
   // 2분 쿨타임 제거, 강의 숨기기 버튼 생성
   $("p:contains('온라인 강의리스트')").append(`
