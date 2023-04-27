@@ -6,6 +6,13 @@ import { bypassCertification } from '../functions/bypassCertification';
  */
 
 export default () => {
+  const removeInterval = setInterval(() => {
+    if (interval) {
+      clearInterval(interval);
+      clearInterval(removeInterval);
+    }
+  }, 300);
+
   // 강의 숨기기 기능에 맞도록 표 레이아웃 구현 방식 수정
   appModule.setRowspan = function () {
     for (let i = 1; i <= 16; i++) {
@@ -51,7 +58,7 @@ export default () => {
 
   // 2분 쿨타임 제거 버튼에 이벤트 설정
   $('#btn-cooltime').click(() => {
-    appModule.getLrnStdSttus = function () {
+    appModule.getLrnStdSttus1 = function () {
       axios.post('/std/lis/evltn/SelectLrnSttusStd.do', this.$data).then(function (response) {
         this.lrnSttus = response.data;
 
@@ -74,6 +81,7 @@ export default () => {
     alert('2분 쿨타임이 제거되었습니다.');
   });
 
+      
   // 강의 숨기기 버튼에 이벤트 설정
   $('#btn-hide-lecture').click(() => {
     if (appModule.listBackup) {
@@ -94,6 +102,8 @@ export default () => {
     appModule.listBackup = undefined;
     $('#new-features .btn-green').toggleClass('btn-green').toggleClass('btn-gray');
   });
+
+  
 
   // 인증 팝업 무시
   bypassCertification();
