@@ -4,6 +4,14 @@
  */
 
 export default () => {
+  // 각종 interval 함수 제거
+  const removeInterval = setInterval(() => {
+    if (interval) {
+      clearInterval(interval);
+      clearInterval(removeInterval);
+    }
+  }, 300);
+  
   // 단축키 안내 추가
   (() => {
     $('body').append(`
@@ -38,7 +46,7 @@ export default () => {
       top: '1px',
     });
 
-    $('.mvtopba > label:last-of-type').after(`
+    $('.mvtopba1 > label:last-of-type').after(`
       <label>
         <a href="#modal-keyboard-shortcut" rel="modal:open" style="background-color: #8e44ad; padding: 10px; text-decoration: none">
           <span style="color: white; font-weight: bold; margin-left: 4px">단축키 안내</span>
