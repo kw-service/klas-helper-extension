@@ -11,7 +11,7 @@ export default () => {
       clearInterval(removeInterval);
     }
   }, 300);
-  
+
   // 단축키 안내 추가
   (() => {
     $('body').append(`

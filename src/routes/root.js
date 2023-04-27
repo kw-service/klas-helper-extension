@@ -7,13 +7,9 @@
 const renewSession = () => {
   // Call extern function
   // The extern function defines in HTML
-  const sessionRenewFunction =
-    typeof(sessionExtensionReq) == 'function' ? sessionExtensionReq :
-    typeof(sessionExtensionReq1) == 'function' ? sessionExtensionReq1 :
-    undefined
+  const sessionRenewFunction = typeof (sessionExtensionReq) === 'function' ? sessionExtensionReq : typeof (sessionExtensionReq1) === 'function' ? sessionExtensionReq1 : undefined;
 
-  if (sessionRenewFunction)
-    sessionRenewFunction();
+  if (sessionRenewFunction) sessionRenewFunction();
   return;
 };
 

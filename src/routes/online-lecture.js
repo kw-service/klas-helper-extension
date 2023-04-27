@@ -81,7 +81,6 @@ export default () => {
     alert('2분 쿨타임이 제거되었습니다.');
   });
 
-      
   // 강의 숨기기 버튼에 이벤트 설정
   $('#btn-hide-lecture').click(() => {
     if (appModule.listBackup) {
@@ -102,8 +101,6 @@ export default () => {
     appModule.listBackup = undefined;
     $('#new-features .btn-green').toggleClass('btn-green').toggleClass('btn-gray');
   });
-
-  
 
   // 인증 팝업 무시
   bypassCertification();
