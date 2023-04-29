@@ -63,7 +63,10 @@ export default () => {
         if (item.indexOf(':') === -1) continue;
         if (item.indexOf('viewer/') !== -1 && item.indexOf('height') !== -1 && item.indexOf('width=') !== -1) {
           funcName = item.split(':')[0];
-          if (funcName) funcName = funcName.trim();
+          if (funcName) {
+            funcName = funcName.trim();
+            break;
+          }
         }
       }
     }
