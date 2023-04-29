@@ -7,7 +7,23 @@
 const renewSession = () => {
   // Call extern function
   // The extern function defines in HTML
-  const sessionRenewFunction = typeof (sessionExtensionReq) === 'function' ? sessionExtensionReq : typeof (sessionExtensionReq1) === 'function' ? sessionExtensionReq1 : undefined;
+  let funcName;
+  for (let i in document.scripts) {
+    let script = document.scripts[i];
+    let innerHtml = script.innerHTML;
+    if (!innerHtml) continue;
+    let items = innerHtml.split('function ');
+    for (let j in items) {
+      let item = items[j];
+      if (item.indexOf('(') === -1) continue;
+      if (item.indexOf('/usr/cmn/login/UpdateSession.do') !== -1) {
+        funcName = item.split('(')[0];
+        if (funcName) funcName = funcName.trim();
+        break;
+      }
+    }
+  }
+  const sessionRenewFunction = typeof (self[funcName]) === 'function' ? self[funcName] : undefined;
 
   if (sessionRenewFunction) sessionRenewFunction();
   return;
