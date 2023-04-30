@@ -6,13 +6,6 @@ import { bypassCertification } from '../functions/bypassCertification';
  */
 
 export default () => {
-  const removeInterval = setInterval(() => {
-    if (interval) {
-      clearInterval(interval);
-      clearInterval(removeInterval);
-    }
-  }, 300);
-
   // 강의 숨기기 기능에 맞도록 표 레이아웃 구현 방식 수정
   appModule.setRowspan = function () {
     for (let i = 1; i <= 16; i++) {
@@ -41,6 +34,7 @@ export default () => {
     }
   };
 
+  let randomStr = Math.random().toString(36).slice(2);
   // 안내 문구 및 새로운 기능 렌더링
   $('#appModule > table:not(#prjctList)').after(`
     <div id="new-features" style="border: 1px solid #d3d0d0; border-radius: 5px; margin-top: 30px; padding: 10px">
@@ -50,35 +44,58 @@ export default () => {
       <div>- 2분 쿨타임 제거: 2분 쿨타임을 제거할 수 있습니다. 단, 동시에 여러 콘텐츠 학습을 하지 않도록 주의해 주세요.</div>
       <div>- 강의 숨기기: 진도율 100%인 강의를 숨길 수 있습니다.</div>
       <div style="margin-top: 20px">
-        <button type="button" id="btn-cooltime" class="btn2 btn-learn">2분 쿨타임 제거</button>
+        <button type="button" id="${randomStr}" class="btn2 btn-learn">2분 쿨타임 제거</button>
         <button type="button" id="btn-hide-lecture" class="btn2 btn-gray">강의 숨기기 On / Off</button>
       </div>
     </div>
 `);
 
   // 2분 쿨타임 제거 버튼에 이벤트 설정
-  $('#btn-cooltime').click(() => {
-    appModule.getLrnStdSttus1 = function () {
-      axios.post('/std/lis/evltn/SelectLrnSttusStd.do', this.$data).then(function (response) {
-        this.lrnSttus = response.data;
-
-        if (response.data === 'Y' || response.data === 'N') {
-          if (ios) {
-            $('#viewForm').prop('target', '_blank').prop('action', '/spv/lis/lctre/viewer/LctreCntntsViewSpvPage.do').submit();
-          }
-          else {
-            let popup = window.open('', 'previewPopup', 'resizable=yes, scrollbars=yes, top=100px, left=100px, height=' + this.height + 'px, width= ' + this.width + 'px');
-            $('#viewForm').prop('target', 'previewPopup').prop('action', '/spv/lis/lctre/viewer/LctreCntntsViewSpvPage.do').submit().prop('target', '');
-            popup.focus();
+  $('#' + randomStr).click(() => {
+    let funcName = 'getLrnStdSttus1';
+    for (let i in document.scripts) {
+      let script = document.scripts[i];
+      let innerHtml = script.innerHTML;
+      if (!innerHtml) continue;
+      let items = innerHtml.split('},');
+      for (let j in items) {
+        let item = items[j];
+        if (item.indexOf(':') === -1) continue;
+        if (item.indexOf('viewer/') !== -1 && item.indexOf('height') !== -1 && item.indexOf('width=') !== -1) {
+          funcName = item.split(':')[0];
+          if (funcName) {
+            funcName = funcName.trim();
+            break;
           }
         }
-        else if (response.request.responseURL.includes('LoginForm.do')) {
-          linkUrl(response.request.responseURL);
-        }
-      }.bind(this));
-    };
+      }
+    }
+    if (appModule[funcName]) {
+      appModule[funcName] = function () {
+        axios.post('/std/lis/evltn/SelectLrnSttusStd.do', this.$data).then(function (response) {
+          this.lrnSttus = response.data;
 
-    alert('2분 쿨타임이 제거되었습니다.');
+          if (response.data === 'Y' || response.data === 'N') {
+            if (ios) {
+              $('#viewForm').prop('target', '_blank').prop('action', '/spv/lis/lctre/viewer/LctreCntntsViewSpvPage.do').submit();
+            }
+            else {
+              let popup = window.open('', 'previewPopup', 'resizable=yes, scrollbars=yes, top=100px, left=100px, height=' + this.height + 'px, width= ' + this.width + 'px');
+              $('#viewForm').prop('target', 'previewPopup').prop('action', '/spv/lis/lctre/viewer/LctreCntntsViewSpvPage.do').submit().prop('target', '');
+              popup.focus();
+            }
+          }
+          else if (response.request.responseURL.includes('LoginForm.do')) {
+            linkUrl(response.request.responseURL);
+          }
+        }.bind(this));
+      };
+
+      alert('2분 쿨타임이 제거되었습니다.');
+    }
+    else {
+      alert('2분 쿨타임을 제거하지 못했습니다.');
+    }
   });
 
   // 강의 숨기기 버튼에 이벤트 설정
