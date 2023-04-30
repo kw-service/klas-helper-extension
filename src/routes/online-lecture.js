@@ -70,7 +70,7 @@ export default () => {
         }
       }
     }
-    if (funcName) {
+    if (appModule[funcName]) {
       appModule[funcName] = function () {
         axios.post('/std/lis/evltn/SelectLrnSttusStd.do', this.$data).then(function (response) {
           this.lrnSttus = response.data;
