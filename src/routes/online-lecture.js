@@ -34,7 +34,7 @@ export default () => {
     }
   };
 
-  let randomStr = (Math.floor(Math.random() * 50) + '').repeat(Math.floor(Math.random() * 30));
+  let randomStr = Math.random().toString(36).slice(2);
   // 안내 문구 및 새로운 기능 렌더링
   $('#appModule > table:not(#prjctList)').after(`
     <div id="new-features" style="border: 1px solid #d3d0d0; border-radius: 5px; margin-top: 30px; padding: 10px">
