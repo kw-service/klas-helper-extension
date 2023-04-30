@@ -7,7 +7,7 @@
 const renewSession = () => {
   // Call extern function
   // The extern function defines in HTML
-  let funcName;
+  let funcName = 'sessionExtensionReq1';
   for (let i in document.scripts) {
     let script = document.scripts[i];
     let innerHtml = script.innerHTML;

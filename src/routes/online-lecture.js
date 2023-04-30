@@ -52,7 +52,7 @@ export default () => {
 
   // 2분 쿨타임 제거 버튼에 이벤트 설정
   $('#' + randomStr).click(() => {
-    let funcName;
+    let funcName = 'getLrnStdSttus1';
     for (let i in document.scripts) {
       let script = document.scripts[i];
       let innerHtml = script.innerHTML;
