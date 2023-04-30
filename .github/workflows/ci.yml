@@ -34,7 +34,8 @@ jobs:
           node-version: 18
       - run: npm install
       - run: npm run build
-      - run: |
+      - if: github.ref == 'refs/heads/main'
+        run: |
           if ! git diff --quiet; then
             git config --global user.name "github-actions"
             git config --global user.email "github-actions@users.noreply.github.com"
