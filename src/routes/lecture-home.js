@@ -1,4 +1,5 @@
 import { bypassCertification } from '../functions/bypassCertification';
+import { generateRandomString } from '../utils/string';
 
 /**
  * 페이지 이름: 강의 종합
@@ -72,17 +73,19 @@ const addLecturePlan = async () => {
 };
 
 export default () => {
-  // 인증 팝업 무시
-  bypassCertification();
+  const coolTimeButtonId = generateRandomString();
+  const bypassCertificationButtonId = generateRandomString();
+  const hideLectureButtonId = generateRandomString();
 
   // 2분 쿨타임 제거, 강의 숨기기 버튼 생성
   $("p:contains('온라인 강의리스트')").append(`
-    <button type="button" class="btn2 btn-learn btn-cooltime">2분 쿨타임 제거</button>
-    <button type="button" class="btn2 btn-gray btn-clean">강의 숨기기 On / Off</button>
+    <button type="button" id="${coolTimeButtonId}" class="btn2 btn-learn">2분 쿨타임 제거</button>
+    <button type="button" id="${bypassCertificationButtonId}" class="btn2 btn-learn">인증 우회</button>
+    <button type="button" id="${hideLectureButtonId}" class="btn2 btn-gray">강의 숨기기 On / Off</button>
   `);
 
   // 2분 쿨타임 제거 버튼에 이벤트 설정
-  $('.btn-cooltime').click(() => {
+  $(`#${coolTimeButtonId}`).click(() => {
     appModule.getLrnSttus = function () {
       axios.post('/std/lis/evltn/SelectLrnSttusStd.do', this.$data).then(function (response) {
         this.lrnSttus = response.data;
@@ -106,8 +109,14 @@ export default () => {
     alert('2분 쿨타임이 제거되었습니다.');
   });
 
+  // 인증 우회 버튼에 이벤트 설정
+  $(`#${bypassCertificationButtonId}`).click(() => {
+    // 인증 팝업 무시
+    bypassCertification();
+  });
+
   // 강의 숨기기 버튼에 이벤트 설정
-  $('.btn-clean').click(() => {
+  $(`#${hideLectureButtonId}`).click(() => {
     if (appModule.origin === undefined) {
       appModule.origin = appModule.cntntList;
       let copy = [];
@@ -121,8 +130,8 @@ export default () => {
       appModule.origin = undefined;
     }
 
-    $('.btn-clean').toggleClass('btn-green');
-    $('.btn-clean').toggleClass('btn-gray');
+    $(`#${hideLectureButtonId}`).toggleClass('btn-green');
+    $(`#${hideLectureButtonId}`).toggleClass('btn-gray');
   });
 
   // 과목 변경시 강의 숨기기 초기화

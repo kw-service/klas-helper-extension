@@ -1,4 +1,5 @@
 import { bypassCertification } from '../functions/bypassCertification';
+import { generateRandomString } from '../utils/string';
 
 /**
  * 페이지 이름: 온라인 강의 콘텐츠 보기
@@ -34,7 +35,10 @@ export default () => {
     }
   };
 
-  let randomStr = Math.random().toString(36).slice(2);
+  const coolTimeButtonId = generateRandomString();
+  const bypassCertificationButtonId = generateRandomString();
+  const hideLectureButtonId = generateRandomString();
+
   // 안내 문구 및 새로운 기능 렌더링
   $('#appModule > table:not(#prjctList)').after(`
     <div id="new-features" style="border: 1px solid #d3d0d0; border-radius: 5px; margin-top: 30px; padding: 10px">
@@ -44,15 +48,18 @@ export default () => {
       <div>- 2분 쿨타임 제거: 2분 쿨타임을 제거할 수 있습니다. 단, 동시에 여러 콘텐츠 학습을 하지 않도록 주의해 주세요.</div>
       <div>- 강의 숨기기: 진도율 100%인 강의를 숨길 수 있습니다.</div>
       <div style="margin-top: 20px">
-        <button type="button" id="${randomStr}" class="btn2 btn-learn">2분 쿨타임 제거</button>
-        <button type="button" id="btn-hide-lecture" class="btn2 btn-gray">강의 숨기기 On / Off</button>
+        <button type="button" id="${coolTimeButtonId}" class="btn2 btn-learn">2분 쿨타임 제거</button>
+        <button type="button" id="${bypassCertificationButtonId}" class="btn2 btn-learn">인증 우회</button>
+        <button type="button" id="${hideLectureButtonId}" class="btn2 btn-gray">강의 숨기기 On / Off</button>
       </div>
     </div>
-`);
+  `);
 
   // 2분 쿨타임 제거 버튼에 이벤트 설정
-  $('#' + randomStr).click(() => {
+  $(`#${coolTimeButtonId}`).click(() => {
     let funcName = 'getLrnStdSttus1';
+
+    // 함수 이름이 바뀌었을 때를 대비해서 스크립트에서 함수 이름을 찾아서 사용
     for (let i in document.scripts) {
       let script = document.scripts[i];
       let innerHtml = script.innerHTML;
@@ -70,6 +77,8 @@ export default () => {
         }
       }
     }
+
+    // 2분 쿨타임 제거
     if (appModule[funcName]) {
       appModule[funcName] = function () {
         axios.post('/std/lis/evltn/SelectLrnSttusStd.do', this.$data).then(function (response) {
@@ -98,8 +107,14 @@ export default () => {
     }
   });
 
+  // 인증 우회 버튼에 이벤트 설정
+  $(`#${bypassCertificationButtonId}`).click(() => {
+    // 인증 팝업 무시
+    bypassCertification();
+  });
+
   // 강의 숨기기 버튼에 이벤트 설정
-  $('#btn-hide-lecture').click(() => {
+  $(`#${hideLectureButtonId}`).click(() => {
     if (appModule.listBackup) {
       appModule.list = appModule.listBackup;
       appModule.listBackup = undefined;
@@ -109,8 +124,8 @@ export default () => {
       appModule.list = appModule.list.filter((v) => { if (v.prog !== 100) return v; });
     }
 
-    $('#btn-hide-lecture').toggleClass('btn-gray');
-    $('#btn-hide-lecture').toggleClass('btn-green');
+    $(`#${hideLectureButtonId}`).toggleClass('btn-gray');
+    $(`#${hideLectureButtonId}`).toggleClass('btn-green');
   });
 
   // 과목 변경 시 적용된 기능 초기화
@@ -118,7 +133,4 @@ export default () => {
     appModule.listBackup = undefined;
     $('#new-features .btn-green').toggleClass('btn-green').toggleClass('btn-gray');
   });
-
-  // 인증 팝업 무시
-  bypassCertification();
 };
