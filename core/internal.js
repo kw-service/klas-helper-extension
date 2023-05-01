@@ -51,7 +51,7 @@ export const internalPathFunctions = {
                 <span style="color: white; font-weight: bold">${videoType} 받기 #${i + 1}</span>
               </a>
             `;
-            document.querySelector('.mvtopba1 > label:last-of-type').after(labelElement);
+            document.querySelector('.antopba > label:last-of-type').after(labelElement);
           }
 
           // 슬라이드 다운로드, 마찬가지로 백그라운드 이용
@@ -118,7 +118,7 @@ export const internalPathFunctions = {
                 }
               }
             }
-            document.querySelector('.mvtopba1 > label:last-of-type').after(labelElement);
+            document.querySelector('.antopba > label:last-of-type').after(labelElement);
           })
             
           });
