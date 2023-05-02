@@ -1,4 +1,3 @@
-import { bypassCertification } from '../functions/bypassCertification';
 import { generateRandomString } from '../utils/string';
 
 /**
@@ -74,13 +73,11 @@ const addLecturePlan = async () => {
 
 export default () => {
   const coolTimeButtonId = generateRandomString();
-  const bypassCertificationButtonId = generateRandomString();
   const hideLectureButtonId = generateRandomString();
 
-  // 2분 쿨타임 제거, 강의 숨기기 버튼 생성
+  // 2분 쿨타임 제거 기능, 강의 숨기기 버튼 생성
   $("p:contains('온라인 강의리스트')").append(`
     <button type="button" id="${coolTimeButtonId}" class="btn2 btn-learn">2분 쿨타임 제거</button>
-    <button type="button" id="${bypassCertificationButtonId}" class="btn2 btn-learn">인증 우회</button>
     <button type="button" id="${hideLectureButtonId}" class="btn2 btn-gray">강의 숨기기 On / Off</button>
   `);
 
@@ -109,11 +106,6 @@ export default () => {
     alert('2분 쿨타임이 제거되었습니다.');
   });
 
-  // 인증 우회 버튼에 이벤트 설정
-  $(`#${bypassCertificationButtonId}`).click(() => {
-    // 인증 팝업 무시
-    bypassCertification();
-  });
 
   // 강의 숨기기 버튼에 이벤트 설정
   $(`#${hideLectureButtonId}`).click(() => {

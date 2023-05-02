@@ -1,4 +1,3 @@
-import { bypassCertification } from '../functions/bypassCertification';
 import { generateRandomString } from '../utils/string';
 
 /**
@@ -36,7 +35,6 @@ export default () => {
   };
 
   const coolTimeButtonId = generateRandomString();
-  const bypassCertificationButtonId = generateRandomString();
   const hideLectureButtonId = generateRandomString();
 
   // 안내 문구 및 새로운 기능 렌더링
@@ -49,7 +47,6 @@ export default () => {
       <div>- 강의 숨기기: 진도율 100%인 강의를 숨길 수 있습니다.</div>
       <div style="margin-top: 20px">
         <button type="button" id="${coolTimeButtonId}" class="btn2 btn-learn">2분 쿨타임 제거</button>
-        <button type="button" id="${bypassCertificationButtonId}" class="btn2 btn-learn">인증 우회</button>
         <button type="button" id="${hideLectureButtonId}" class="btn2 btn-gray">강의 숨기기 On / Off</button>
       </div>
     </div>
@@ -107,11 +104,6 @@ export default () => {
     }
   });
 
-  // 인증 우회 버튼에 이벤트 설정
-  $(`#${bypassCertificationButtonId}`).click(() => {
-    // 인증 팝업 무시
-    bypassCertification();
-  });
 
   // 강의 숨기기 버튼에 이벤트 설정
   $(`#${hideLectureButtonId}`).click(() => {

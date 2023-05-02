@@ -42,16 +42,16 @@ export const internalPathFunctions = {
           
           // 다운로드 버튼 렌더링
           for (let i = 0; i < videoList.length; i++) {
-            const videoURL = videoList[i].url;
-            const videoType = videoList[i].type === 'video1' ? '동영상' : '오디오';
+            // const videoURL = videoList[i].url;
+            // const videoType = videoList[i].type === 'video1' ? '동영상' : '오디오';
 
-            const labelElement = document.createElement('label');
-            labelElement.innerHTML = `
-              <a href="${videoURL}" target="_blank" style="background-color: brown; padding: 10px; text-decoration: none">
-                <span style="color: white; font-weight: bold">${videoType} 받기 #${i + 1}</span>
-              </a>
-            `;
-            document.querySelector('.antopba > label:last-of-type').after(labelElement);
+            // const labelElement = document.createElement('label');
+            // labelElement.innerHTML = `
+            //   <a href="${videoURL}" target="_blank" style="background-color: brown; padding: 10px; text-decoration: none">
+            //     <span style="color: white; font-weight: bold">${videoType} 받기 #${i + 1}</span>
+            //   </a>
+            // `;
+            // document.querySelector('.antopba > label:last-of-type').after(labelElement);
           }
 
           // 슬라이드 다운로드, 마찬가지로 백그라운드 이용
