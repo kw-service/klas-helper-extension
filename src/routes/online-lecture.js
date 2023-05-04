@@ -40,8 +40,6 @@ export default () => {
   // 안내 문구 및 새로운 기능 렌더링
   $('#appModule > table:not(#prjctList)').after(`
     <div id="new-features" style="border: 1px solid #d3d0d0; border-radius: 5px; margin-top: 30px; padding: 10px">
-      <div>온라인 강의 다운로드는 '보기' 버튼을 누르면 나오는 강의 화면 페이지에서 이용하실 수 있습니다.</div>
-      <div style="color: red">온라인 강의 시 사용되는 강의 내용을 공유 및 배포하는 것은 저작권을 침해하는 행위이므로 꼭 개인 소장 용도로만 이용해 주시기 바랍니다.</div>
       <div style="font-weight: bold; margin-top: 10px">추가된 기능</div>
       <div>- 2분 쿨타임 제거: 2분 쿨타임을 제거할 수 있습니다. 단, 동시에 여러 콘텐츠 학습을 하지 않도록 주의해 주세요.</div>
       <div>- 강의 숨기기: 진도율 100%인 강의를 숨길 수 있습니다.</div>
@@ -103,7 +101,6 @@ export default () => {
       alert('2분 쿨타임을 제거하지 못했습니다.');
     }
   });
-
 
   // 강의 숨기기 버튼에 이벤트 설정
   $(`#${hideLectureButtonId}`).click(() => {

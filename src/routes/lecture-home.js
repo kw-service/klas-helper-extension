@@ -106,7 +106,6 @@ export default () => {
     alert('2분 쿨타임이 제거되었습니다.');
   });
 
-
   // 강의 숨기기 버튼에 이벤트 설정
   $(`#${hideLectureButtonId}`).click(() => {
     if (appModule.origin === undefined) {
