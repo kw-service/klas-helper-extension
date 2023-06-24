@@ -5,7 +5,6 @@
 
 const handleCapsLock = () => {
   // Capslock 키를 눌렀을 때 경고 메시지 출력
-  console.log('load');
   const password = $('#loginPwd');
   const message = $("<span style='display: block; text-align: left; color: red;'> </span>");
 
