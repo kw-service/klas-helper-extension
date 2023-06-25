@@ -2,6 +2,7 @@
   "name": "klas-helper",
   "private": true,
   "scripts": {
+    "build-win": "set NODE_OPTIONS=--openssl-legacy-provider && cross-env NODE_ENV=production webpack --config config/webpack.config.ts --progress",
     "build": "export NODE_OPTIONS=--openssl-legacy-provider && cross-env NODE_ENV=production webpack --config config/webpack.config.ts --progress",
     "dev": "export NODE_OPTIONS=--openssl-legacy-provider && npm run env && cross-env NODE_ENV=development webpack-dev-server --config config/webpack.config.ts --host 0.0.0.0 --watch-poll",
     "lint": "eslint .",
