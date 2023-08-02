@@ -1,9 +1,9 @@
 {
   "root": true,
-  "extends": "eslint-config-retn0",
+  "extends": "retn0",
   "ignorePatterns": [
-    "assets/",
-    "core/"
+    "dist/**/*",
+    "public/**/*"
   ],
   "rules": {
     "no-var": ["off"]

@@ -5,7 +5,7 @@ import {
 
 // 확장 프로그램은 load가 필요없습니다
 (() => {
-  const dependencies = [];
+  const dependencies: string[] = [];
   // const dependencies = [
   //   'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js',
   //   'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css',

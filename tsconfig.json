@@ -6,6 +6,10 @@
     "strict": true,
     "target": "es2018"
   },
+  "include": [
+    "src/**/*",
+    "types/**/*"
+  ],
   "exclude": [
     "node_modules/"
   ]

@@ -1,8 +1,6 @@
-if (typeof browser === 'undefined') {
-  var browser = chrome;
-}
+import { browser } from './core/browser';
 
-async function asyncGetXMLData(request) {
+async function asyncGetXMLData(request: any) {
   const response = await fetch('https://kwcommons.kw.ac.kr/viewer/ssplayer/uniplayer_support/content.php?content_id=' + request.videoCode);
   const data = await response.text();
   if (response.status === 200) {
@@ -13,7 +11,7 @@ async function asyncGetXMLData(request) {
   }
 }
 
-async function asyncGetSlide(request) {
+async function asyncGetSlide(request: any) {
   const response = await fetch(request);
   const data = await response.text();
   if (response.status === 200) {
@@ -24,16 +22,14 @@ async function asyncGetSlide(request) {
   }
 }
 
-async function asyncGetImage(imageURI) {
+async function asyncGetImage(imageURI: string) {
   const response = await fetch(imageURI);
-  const blob = await response.blob({
-    type: 'image/jpeg',
-  });
+  const blob = await response.blob();
   const base64 = await blobToBase64(blob);
   return base64;
 }
 
-function blobToBase64(blob) {
+function blobToBase64(blob: any) {
   return new Promise((resolve, _) => {
     const reader = new FileReader();
     reader.onloadend = () => resolve(reader.result);
@@ -90,20 +86,20 @@ browser.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     if (msg.value === 'disabled') {
       browser.action.setIcon({
         path: {
-          '16': '/assets/icon_disabled_16x16.png',
-          '32': '/assets/icon_disabled_32x32.png',
-          '48': '/assets/icon_disabled_48x48.png',
-          '128': '/assets/icon_disabled_128x128.png',
+          16: '/assets/images/icon-disabled-16x16.png',
+          32: '/assets/images/icon-disabled-32x32.png',
+          48: '/assets/images/icon-disabled-48x48.png',
+          128: '/assets/images/icon-disabled-128x128.png',
         },
       });
     }
     else {
       browser.action.setIcon({
         path: {
-          '16': '/assets/icon_16x16.png',
-          '32': '/assets/icon_32x32.png',
-          '48': '/assets/icon_48x48.png',
-          '128': '/assets/icon_128x128.png',
+          16: '/assets/images/icon-16x16.png',
+          32: '/assets/images/icon-32x32.png',
+          48: '/assets/images/icon-48x48.png',
+          128: '/assets/images/icon-128x128.png',
         },
       });
     }

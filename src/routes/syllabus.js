@@ -13,18 +13,18 @@ export default () => {
   appModule.goLectrePlan = function (item) {
     const selectSubj = 'U' + item.thisYear + item.hakgi + item.openGwamokNo + item.openMajorCode + item.bunbanNo + item.openGrade;
 
-    if (item.closeOpt == 'Y') {
+    if (item.closeOpt === 'Y') {
       alert('폐강된 강의 입니다.');
       return false;
     }
-    if (item.summary == null) {
+    if (item.summary === null) {
       alert('강의 계획서 정보가 없습니다!');
       return false;
     }
 
     axios.post('CultureOptOneInfo.do', appModule.$data)
       .then(function (response) {
-        if (response.data.cultureOpt == null) {
+        if (response.data.cultureOpt === null) {
           window.open('https://klas.kw.ac.kr/std/cps/atnlc/popup/LectrePlanStdView.do?selectSubj=' + selectSubj, '', 'width=1000, height=800, scrollbars=yes, title=강의계획서 조회');
         }
         else {
