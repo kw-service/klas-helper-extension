@@ -1,6 +1,5 @@
-if (typeof browser === 'undefined') {
-  var browser = chrome;
-}
+import { browser } from './core/browser';
+
 function main() {
   var document_observer = new MutationObserver(function (mutations) {
     // 기본 css가 important가 되기 때문에, 모든 css파일이 로드가 된 후에 추가합니다.
@@ -26,7 +25,7 @@ function main() {
             style.href = browser.runtime.getURL('dark.css');
             style.type = 'text/css';
             style.rel = 'stylesheet';
-            document.querySelector('head').append(style);
+            document.querySelector('head')?.append(style);
           }
         });
       }
