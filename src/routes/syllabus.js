@@ -24,7 +24,7 @@ export default () => {
 
     axios.post('CultureOptOneInfo.do', appModule.$data)
       .then(function (response) {
-        if (response.data.cultureOpt === null) {
+        if (!Boolean(response.data.cultureOpt)) {
           window.open('https://klas.kw.ac.kr/std/cps/atnlc/popup/LectrePlanStdView.do?selectSubj=' + selectSubj, '', 'width=1000, height=800, scrollbars=yes, title=강의계획서 조회');
         }
         else {
