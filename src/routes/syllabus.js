@@ -32,4 +32,27 @@ export default () => {
         }
       });
   };
+
+  // 검색 함수 업그레이드
+  appModule.getSearch = function () {
+    this.isSearch = 'N';
+    this.selectYearHakgi = this.selectYear + ',' + this.selecthakgi;
+
+    // 서버 부하 문제로 모든 강의 계획서 검색 금지
+    if (
+      this.selectRadio === 'all' &&
+        this.selectText === '' &&
+        this.selectProfsr === '' &&
+        this.cmmnGamok === '' &&
+        this.selecthakgwa === ''
+    ) {
+      alert('과목명 또는 담당 교수를 입력하지 않은 경우 반드시 과목이나 학과를 선택하셔야 합니다.');
+      return;
+    }
+
+    // 데이터 요청
+    axios.post('LectrePlanStdList.do', this.$data).then((response) => {
+      this.list = response.data;
+    });
+  };
 };
