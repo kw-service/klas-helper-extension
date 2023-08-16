@@ -107,5 +107,12 @@ export default () => {
       </ul>
     </li>`);
     classInfoUl.append(newLi);
+
+    // 졸업가부 및 졸업불가사유 확인 메뉴 추가
+    $('.depth03ul:eq(8)').append(`
+      <li>
+        <a href="/std/ext/grdtn/GrdtnYnImprtyResnStdPage.do">졸업가부 및 졸업불가사유 확인</a>
+      </li>
+    `);
   }
 };

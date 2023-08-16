@@ -30,13 +30,6 @@ import {
     </span>
   `);
 
-  // 졸업가부 및 졸업불가사유 확인 메뉴 추가
-  $('.depth03ul:eq(8)').append(`
-    <li>
-      <a href="/std/ext/grdtn/GrdtnYnImprtyResnStdPage.do">졸업가부 및 졸업불가사유 확인</a>
-    </li>
-  `);
-
   // 위로 가기 버튼 위치 고정
   $('.btnup').css({
     bottom: '30px',
