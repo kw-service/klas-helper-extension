@@ -3,6 +3,8 @@
 ![Chrome Web Store](https://img.shields.io/chrome-web-store/v/jicidjkhiefbhbgbfbemakjndloecjlf?style=flat-square)
 ![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/klas-helper/klas-helper-extension/ci.yml?branch=main&label=ci&style=flat-square)
 [![gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square)](https://gitmoji.dev)
+[![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?logo=discord&logoColor=white)](https://discord.gg/rWuDEd6D3V)
+
 
 `KLAS Helper`는 광운대학교 KLAS 사이트에 편리한 기능을 추가하는 브라우저 확장 프로그램입니다.
 
@@ -21,7 +23,7 @@
 
 ![Chrome](https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png) | ![Firefox](https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png) | ![IE](https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png) | ![Opera](https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png) | ![Safari](https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png)
 --- | --- | --- | --- | --- |
-Latest ✔️ | Latest ✔️ | Latest ✔️ | Not Checked | Not Checked |
+Latest ✔️ | 1.2.0.0 | Latest ✔️ | Not Checked | Not Checked |
 
 ### Chrome
 
