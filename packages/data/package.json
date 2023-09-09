@@ -1,0 +1,5 @@
+{
+  "name": "@klas-helper/data",
+  "private": true,
+  "main": "src/index.ts"
+}

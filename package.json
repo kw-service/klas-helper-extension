@@ -1,6 +1,9 @@
 {
   "name": "klas-helper",
   "private": true,
+  "workspaces": [
+    "packages/**/*"
+  ],
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --progress",
     "dev": "cross-env NODE_ENV=development webpack --progress --watch",
@@ -8,6 +11,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@klas-helper/data": "*",
     "jquery": "3.7.0"
   },
   "devDependencies": {
