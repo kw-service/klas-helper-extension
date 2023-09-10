@@ -26,6 +26,14 @@ const config: Configuration = {
         test: /\.tsx?$/,
         use: 'ts-loader',
       },
+      {
+        test: /\.scss$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'sass-loader',
+        ],
+      },
     ],
   },
   plugins: [
