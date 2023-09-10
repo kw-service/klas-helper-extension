@@ -1,18 +1,18 @@
-import handleHome from './home';
-import handleSyllabus from './syllabus';
-import handleSyllabusGraduate from './syllabus-graduate';
-import handleScore from './score';
-import handleRank from './rank';
-import handleLectureHome from './lecture-home';
 import handleEvaluation from './evaluation';
-import handleOnlineLecture from './online-lecture';
-import handleTakeLecture from './take-lecture';
+import handleHome from './home';
+import handleLectureHome from './lecture-home';
 import handleLenturePlan from './lecture-plan-std';
 import handleLecturePlanView from './lecture-plan-view';
-import handleCalculateToeic from './score-toeic';
-import handleTimeTable from './timetable';
-import handleRootHomepage from './root';
 import handleLogin from './login';
+import handleOnlineLecture from './online-lecture';
+import handleRank from './rank';
+import handleRootHomepage from './root';
+import handleScore from './score';
+import handleCalculateToeic from './score-toeic';
+import handleSyllabus from './syllabus';
+import handleSyllabusGraduate from './syllabus-graduate';
+import handleTakeLecture from './take-lecture';
+import handleTimeTable from './timetable';
 
 export default {
   '/std/cmn/frame/Frame.do': handleHome,
