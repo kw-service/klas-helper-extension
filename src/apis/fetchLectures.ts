@@ -75,21 +75,3 @@ export async function fetchLectures(requestData: FetchLecturesRequestData): Prom
 
   return (await response.json()).map(parseLecture);
 }
-
-// Request data
-// {
-//   "selectSubj": "",
-//   "selectYear": "2023",
-//   "selecthakgi": "2",
-//   "isSearch": "N",
-//   "randomNum": 7483,
-//   "numText": "",
-//   "selectRadio": "my",
-//   "selectText": "",
-//   "selectProfsr": "",
-//   "cmmnGamok": "",
-//   "selecthakgwa": "",
-//   "selectMajor": "",
-//   "selectMajorList": [],
-//   "stopFlag": "N"
-// }
