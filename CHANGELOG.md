@@ -5,6 +5,7 @@
 - [Fixed] 수강인원 조회 기능이 동작하지 않던 오류를 해결했습니다. (https://github.com/klas-helper/klas-helper-extension/issues/16)
 - [Fixed] 빠졌던 기능인 검색어 없이 강의를 검색할 수 있는 기능을 추가했습니다.
 - [Added] 졸업가부 및 졸업불가사유 확인 메뉴를 추가했습니다.
+- [Added] 강의 계획서 개선 및 에브리타임 강의평 정보 연동 기능이 추가되었습니다. (https://github.com/klas-helper/klas-helper-extension/pull/24)
 
 ## 2.0.3.0 (2023.06.25)
 - [Fixed] KLAS 구조 변경으로 인해 작동하지 않던 일부 기능(강의계획서 수강인원 조회 등)을 수정하였습니다.
