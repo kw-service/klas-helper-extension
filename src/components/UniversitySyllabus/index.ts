@@ -1,0 +1,1 @@
+export { UniversitySyllabus } from './UniversitySyllabus';
