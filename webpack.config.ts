@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { type Configuration } from 'webpack';
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -19,6 +20,7 @@ const config: Configuration = {
     'content-main': './src/content-main.ts',
     'content-style': './src/content-style.ts',
     'content-video': './src/content-video.ts',
+    dark: './src/styles/dark.scss',
   },
   module: {
     rules: [
@@ -29,7 +31,7 @@ const config: Configuration = {
       {
         test: /\.scss$/,
         use: [
-          'style-loader',
+          MiniCssExtractPlugin.loader,
           'css-loader',
           'sass-loader',
         ],
@@ -38,6 +40,7 @@ const config: Configuration = {
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin(),
     new CopyPlugin({
       patterns: [
         { from: 'public', to: '.' },

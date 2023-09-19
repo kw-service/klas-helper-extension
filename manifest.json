@@ -65,7 +65,8 @@
         "assets/js/jquery.modal.min.js",
         "assets/css/jquery.modal.min.css",
         "dark.css",
-        "app.js"
+        "app.js",
+        "app.css"
       ]
     }
   ],

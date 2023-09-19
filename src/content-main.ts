@@ -57,6 +57,7 @@ async function main() {
   // 메인 파일 삽입
   const scriptElements = [];
   const appJs = browser.runtime.getURL('app.js');
+  const appCss = browser.runtime.getURL('app.css');
   let ChartJs = browser.runtime.getURL('assets/js/Chart.min.js');
   let jQueryModalJs = browser.runtime.getURL('assets/js/jquery.modal.min.js');
   let jQueryModalCss = browser.runtime.getURL('assets/css/jquery.modal.min.css');
@@ -73,7 +74,13 @@ async function main() {
   jQueryModalCssScriptElements.rel = 'stylesheet';
   jQueryModalCssScriptElements.type = 'text/css';
 
+  const appCssLinkElement = document.createElement('link');
+  appCssLinkElement.href = appCss;
+  appCssLinkElement.rel = 'stylesheet';
+  appCssLinkElement.type = 'text/css';
+
   scriptElements.push(appJsScriptElement);
+  scriptElements.push(appCssLinkElement);
   scriptElements.push(chartJsScriptElements);
   scriptElements.push(jQueryModalJsScriptElements);
   scriptElements.push(jQueryModalCssScriptElements);
