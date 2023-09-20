@@ -1,12 +1,10 @@
 {
   "name": "KLAS Helper",
   "manifest_version": 3,
-  "version": "2.0.3.0",
+  "version": "2.1.0.0",
   "description": "광운대학교 KLAS 사이트에 편리한 기능을 추가하는 브라우저 확장 프로그램",
   "homepage_url": "https://github.com/klas-helper/klas-helper-extension",
-  "permissions": [
-    "storage"
-  ],
+  "permissions": ["storage"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -24,40 +22,25 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://klas.kw.ac.kr/*"
-      ],
-      "js": [
-        "content-style.js"
-      ],
+      "matches": ["https://klas.kw.ac.kr/*"],
+      "js": ["content-style.js"],
       "run_at": "document_start"
     },
     {
-      "matches": [
-        "https://klas.kw.ac.kr/*"
-      ],
-      "js": [
-        "content-main.js"
-      ],
+      "matches": ["https://klas.kw.ac.kr/*"],
+      "js": ["content-main.js"],
       "run_at": "document_end"
     },
     {
-      "matches": [
-        "https://kwcommons.kw.ac.kr/*"
-      ],
-      "js": [
-        "content-video.js"
-      ],
+      "matches": ["https://kwcommons.kw.ac.kr/*"],
+      "js": ["content-video.js"],
       "run_at": "document_end",
       "all_frames": true
     }
   ],
   "web_accessible_resources": [
     {
-      "matches": [
-        "https://klas.kw.ac.kr/*",
-        "https://kwcommons.kw.ac.kr/*"
-      ],
+      "matches": ["https://klas.kw.ac.kr/*", "https://kwcommons.kw.ac.kr/*"],
       "resources": [
         "assets/js/jszip.min.js",
         "assets/js/FileSaver.js",
