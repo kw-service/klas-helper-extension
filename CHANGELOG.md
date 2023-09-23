@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- [Fixed] 단축키 안내가 표시되지 않던 버그 수정
+
 ## 2.1.0.0 (2023.09.20)
 
 - [Fixed] 수강인원 조회 기능이 동작하지 않던 오류를 해결했습니다. (https://github.com/klas-helper/klas-helper-extension/issues/16)
