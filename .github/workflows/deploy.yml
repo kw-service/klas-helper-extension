@@ -1,12 +1,9 @@
 name: Deploy
 
 on:
-  # release:
-  #   types:
-  #     - created
-  pull_request:
-    branches:
-      - main
+  release:
+    types:
+      - created
 
 jobs:
   deploy:
@@ -39,4 +36,4 @@ jobs:
           client-id: ${{ secrets.CLIENT_ID }}
           client-secret: ${{ secrets.CLIENT_SECRET }}
           refresh-token: ${{ secrets.REFRESH_TOKEN }}
-          publish: false
+          publish: true
