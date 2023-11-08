@@ -51,6 +51,12 @@
         "app.js",
         "app.css"
       ]
+    },
+    {
+      "matches": ["https://kwcommons.kw.ac.kr/*"],
+      "resources": [
+        "video-viewer.js"
+      ]
     }
   ],
   "background": {

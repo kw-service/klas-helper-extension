@@ -20,6 +20,7 @@ const config: Configuration = {
     'content-main': './src/content-main.ts',
     'content-style': './src/content-style.ts',
     'content-video': './src/content-video.ts',
+    'video-viewer': './src/routes/video-viewer.ts',
     dark: './src/styles/dark.scss',
   },
   module: {
