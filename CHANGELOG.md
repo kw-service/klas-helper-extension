@@ -1,8 +1,9 @@
 # Changelog
 
-## Unreleased
+## 2.1.1.0 (2023.11.09)
 
-- [Fixed] 단축키 안내가 표시되지 않던 버그 수정
+- [Fixed] 단축키 안내가 표시되지 않던 버그를 수정했습니다.
+- [Fixed] 배속 초과 조절이 불가능하던 버그를 수정했습니다. (https://github.com/kw-service/klas-helper-extension/issues/23)
 
 ## 2.1.0.0 (2023.09.20)
 
