@@ -39,9 +39,9 @@ export default () => {
     734: { 'colleage': '전자정보공과대학', 'major': '전자재료공학과', 'colleageHomepage': 'https://ei.kw.ac.kr/', 'majorHomepage': 'https://ee.kw.ac.kr/' },
     741: { 'colleage': '전자정보공과대학', 'major': '로봇학부', 'colleageHomepage': 'https://ei.kw.ac.kr/', 'majorHomepage': 'https://ee.kw.ac.kr/' },
 
-    202: { 'colleage': '소프트웨어융합대학', 'major': '컴퓨터정보공학부', 'colleageHomepage': 'http://sw.kw.ac.kr/', 'majorHomepage': 'http://ce.kw.ac.kr/' },
-    203: { 'colleage': '소프트웨어융합대학', 'major': '소프트웨어학부', 'colleageHomepage': 'http://sw.kw.ac.kr/', 'majorHomepage': 'http://cs.kw.ac.kr/' },
-    204: { 'colleage': '소프트웨어융합대학', 'major': '정보융합학부', 'colleageHomepage': 'http://sw.kw.ac.kr/', 'majorHomepage': 'http://ic.kw.ac.kr/' },
+    202: { 'colleage': '소프트웨어융합대학', 'major': '컴퓨터정보공학부', 'colleageHomepage': 'https://sw.kw.ac.kr:501/', 'majorHomepage': 'https://ce.kw.ac.kr:501/' },
+    203: { 'colleage': '소프트웨어융합대학', 'major': '소프트웨어학부', 'colleageHomepage': 'https://sw.kw.ac.kr:501/', 'majorHomepage': 'https://cs.kw.ac.kr:501/' },
+    204: { 'colleage': '소프트웨어융합대학', 'major': '정보융합학부', 'colleageHomepage': 'https://sw.kw.ac.kr:501/', 'majorHomepage': 'https://ic.kw.ac.kr:501/' },
 
     127: { 'colleage': '공과대학', 'major': '건축학과', 'colleageHomepage': '', 'majorHomepage': 'https://www.kwuarchitecture.com/' },
     117: { 'colleage': '공과대학', 'major': '건축공학과', 'colleageHomepage': '', 'majorHomepage': 'http://archi.kw.ac.kr/' },
