@@ -21,6 +21,7 @@ export default {
   '/std/cps/atnlc/popup/LectrePlanStdNumPopup.do': handleLenturePlan,
   '/std/cps/atnlc/LectrePlanGdhlStdPage.do': handleSyllabusGraduate,
   '/std/cps/inqire/AtnlcScreStdPage.do': handleScore,
+  '/std/cps/inqire/GradScreStdPage.do': handleScore,
   '/std/cps/inqire/StandStdPage.do': handleRank,
   '/std/lis/evltn/LctrumHomeStdPage.do': handleLectureHome,
   '/std/cps/inqire/LctreEvlViewStdPage.do': handleEvaluation,
