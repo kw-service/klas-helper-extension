@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.2.0 (2025.05.10)
+
+- [Added] 졸업생 성적조회기능 대응 기능을 추가했습니다. (https://github.com/kw-service/klas-helper-extension/pull/32)
+- [Added] 공지사항 기능을 추가했습니다.
+
 ## 2.1.1.1 (2023.11.13)
 
 - [Fixed] 소프트웨어융합대학 홈페이지 링크를 수정하였습니다.
