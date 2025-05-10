@@ -49,6 +49,7 @@ async function main() {
         <a href="https://github.com/klas-helper/klas-helper-extension" target="_blank" rel="noopener">확장 프로그램</a>
         사용 중
         `);
+        document.querySelector('.navtxt span:nth-child(1)')!.classList.add('klas-helper-text');
       }
       clearInterval(waitTimer);
     }
