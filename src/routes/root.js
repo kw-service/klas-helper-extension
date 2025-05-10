@@ -88,7 +88,7 @@ export default () => {
   }, 100);
 
   $('#remainingCounter').after(sessionAutoRenewContainer);
-  const noticeTitle = "KLAS Helper 공지사항";
+  const noticeTitle = 'KLAS Helper 공지사항';
   const noticeBody = `<p style="font-weight: bold;">안녕하세요. KLAS Helper 확장 프로그램 개발팀 kw-service입니다.</p>
   <p>저희는 2020년 KLAS로 처음 전환되기 시작한 몇 달 뒤부터 지원을 시작해, 지금까지 평균 약 8천명의 재학생 분들이 해당 확장 프로그램을 사용해 주시고 있습니다.</p>
   <p>하지만, 현재는 대부분의 메인테이너 분들이 졸업을 하고, 그로 인해 프로그램의 유지보수가 힘들어 진 상황입니다.</p>
@@ -99,7 +99,8 @@ export default () => {
   <p style="text-align: center;">GitHub: <a href="https://github.com/kw-service/klas-helper" style="color: blue;">https://github.com/kw-service/klas-helper</a></p>
   <p style="font-weight: bold;">많은 후배분들의 관심 및 참여 부탁드리겠습니다.</p>
   <p style="font-size: larger;">감사합니다!</p>
-  `
+  `;
+
   noticeButton.click(() => {
     const popup = $(`
       <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
