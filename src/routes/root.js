@@ -75,7 +75,62 @@ export default () => {
   // Delete session element
   $('.toplogo').css({ 'max-width': '30%' });
   $('.navtxt').css({ 'max-width': '70%', 'min-width': '70%' });
-  $('#remainingCounter').after($('<span style="">자동 세션 갱신 중</span>'));
+  const sessionAutoRenewContainer = $('<span style="">자동 세션 갱신 중</span>');
+  const noticeButton = $('<button style="color: #afa5a9; background: none; border: 2px solid #afa5a9; border-radius: 25%; cursor: pointer; margin: 5px; font-size: 10px; padding: 2px 4px; line-height: 1; height: 20px;"><i class="fas fa-exclamation"></i></button>');
+
+  // klas-helper-text 요소를 찾아서 sessionAutoRenewButton 추가
+  const checkAndAddButton = setInterval(() => {
+    const klasHelperText = $('.klas-helper-text');
+    if (klasHelperText.length > 0) {
+      klasHelperText.after(noticeButton);
+      clearInterval(checkAndAddButton);
+    }
+  }, 100);
+
+  $('#remainingCounter').after(sessionAutoRenewContainer);
+  const noticeTitle = "KLAS Helper 공지사항";
+  const noticeBody = `<p style="font-weight: bold;">안녕하세요. KLAS Helper 확장 프로그램 개발팀 kw-service입니다.</p>
+  <p>저희는 2020년 KLAS로 처음 전환되기 시작한 몇 달 뒤부터 지원을 시작해, 지금까지 평균 약 8천명의 재학생 분들이 해당 확장 프로그램을 사용해 주시고 있습니다.</p>
+  <p>하지만, 현재는 대부분의 메인테이너 분들이 졸업을 하고, 그로 인해 프로그램의 유지보수가 힘들어 진 상황입니다.</p>
+  <p>그렇기에, 해당 프로그램을 계속해서 유지/보수 및 관리해 주실 분을 찾고 있습니다.</p>
+  <p style="font-style: italic;">관심이 있으신분은, 아래 Discord에 참가하시거나, 아래 이메일로 문의 부탁드리겠습니다.</p>
+  <p style="text-align: center;">이메일: <a href="mailto:mirusu400@naver.com" style="color: green;">mirusu400@naver.com</a></p>
+  <p style="text-align: center;">디스코드: <a href="https://discord.gg/m8GKEwBK" style="color: red;">https://discord.gg/m8GKEwBK</a></p>
+  <p style="text-align: center;">GitHub: <a href="https://github.com/kw-service/klas-helper" style="color: blue;">https://github.com/kw-service/klas-helper</a></p>
+  <p style="font-weight: bold;">많은 후배분들의 관심 및 참여 부탁드리겠습니다.</p>
+  <p style="font-size: larger;">감사합니다!</p>
+  `
+  noticeButton.click(() => {
+    const popup = $(`
+      <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 20px; border-radius: 8px; width: 600px; position: relative;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="margin: 0; color: #333;">
+            ${noticeTitle}
+            </h3>
+            <button class="close-btn" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #666;">×</button>
+          </div>
+          <div style="color: #333;">
+            ${noticeBody}
+          </div>
+        </div>
+      </div>
+    `);
+
+    // 팝업 닫기 버튼 이벤트
+    popup.find('.close-btn').click(() => {
+      popup.remove();
+    });
+
+    // 팝업 외부 클릭시 닫기
+    popup.click((e) => {
+      if (e.target === popup[0]) {
+        popup.remove();
+      }
+    });
+
+    $('body').append(popup);
+  });
   $('#remainingCounter').remove();
 
   $('.fa-retweet').parent().remove();
