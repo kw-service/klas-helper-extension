@@ -97,7 +97,7 @@ export default () => {
   <p style="font-style: italic;">관심이 있으신분은, 아래 Discord에 참가하시거나, 아래 이메일로 문의 부탁드리겠습니다.</p>
   <p style="text-align: center;">이메일: <a href="mailto:mirusu400@naver.com" style="color: green;">mirusu400@naver.com</a></p>
   <p style="text-align: center;">디스코드: <a href="https://discord.gg/m8GKEwBK" style="color: red;">https://discord.gg/m8GKEwBK</a></p>
-  <p style="text-align: center;">GitHub: <a href="https://github.com/kw-service/klas-helper" style="color: blue;">https://github.com/kw-service/klas-helper</a></p>
+  <p style="text-align: center;">GitHub: <a href="https://github.com/kw-service/klas-helper-extension" style="color: blue;">https://github.com/kw-service/klas-helper-extension</a></p>
   <p style="font-weight: bold;">많은 후배분들의 관심 및 참여 부탁드리겠습니다.</p>
   <p style="font-size: larger;">감사합니다!</p>
   `;
