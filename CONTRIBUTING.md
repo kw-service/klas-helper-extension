@@ -20,17 +20,17 @@ KLAS Helper 프로젝트에 관심을 가져 주셔서 감사합니다. 이 프�
 npm install
 ```
 
-3. 아래 명령어를 실행해 개발 환경을 구성합니다.
+3. 아래 명령어를 실행해 개발 환경을 구성합니다. 아래 명령어는, 소스코드 수정시 자동으로 수정사항이 반영되며 새롭게 빌드가 필요하지 않습니다.
 
 ```shell
 npm run dev
 ```
 
-4. 잠시 기다리시면 프로젝트 최상위 폴더에 `dev` 폴더가 생성됩니다.
-5. `dev` 폴더에 있는 `klas-helper.user.js` 파일의 내용을 복사해 Tampermonkey 스크립트로 추가해 주세요. (현재 사용하고 있는 KLAS Helper는 해제하셔야 합니다.)
-6. KLAS 사이트에 접속한 뒤 정상적으로 적용이 됐는지 확인해 보세요.
+4. 잠시 기다리시면 프로젝트 최상위 폴더에 `dist` 폴더가 생성됩니다.
+5. 크롬 브라우저를 열고, [확장 프로그램 설정 페이지](chrome://extensions/)에 들어가, `압축해제된 확장 프로그램을 로드합니다.`를 클릭하세요.
+6. dist 경로를 선택하시면, 개발중인 KLAS Helper Extension이 로드됩니다.
 7. 이제 마음껏 개발하시면 됩니다!
 
 ## 라이선스
 
-이 프로젝트는 [MIT 라이선스](https://github.com/nbsp1221/klas-helper/blob/master/LICENSE)를 따릅니다. 코드를 제공할 경우 MIT 라이선스에 따라 라이선스가 부여되며 이에 동의한 것으로 간주됩니다.
+이 프로젝트는 [MIT 라이선스](https://github.com/kw-service/klas-helper-extension/blob/master/LICENSE)를 따릅니다. 코드를 제공할 경우 MIT 라이선스에 따라 라이선스가 부여되며 이에 동의한 것으로 간주됩니다.
