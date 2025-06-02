@@ -122,4 +122,11 @@ export default () => {
     appModule.listBackup = undefined;
     $('#new-features .btn-green').toggleClass('btn-green').toggleClass('btn-gray');
   });
+
+  // 온라인 강의 인증시 인증번호 입력시 trim() 진행
+  const originalKeyCheck = lrnCerti.keyCheck;
+  lrnCerti.keyCheck = function () {
+    this.inputKey = this.inputKey.trim();
+    originalKeyCheck.call(this);
+  };
 };
