@@ -139,7 +139,7 @@ export default () => {
 
   const topMenu = $('.topmenutxt');
 
-  if (topMenu) {
+  if (topMenu && topMenu.length > 0) {
     const myColleageNumber = parseInt($('a[href*="/std/ads/admst/MyInfoStdPage.do"]').text().split('(')[1].slice(4, 7));
     const myColleageDB = colleageDB[myColleageNumber];
     const classInfoUl = topMenu.children().eq(1).find('.depth02ul');
