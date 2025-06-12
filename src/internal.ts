@@ -125,7 +125,7 @@ export const internalPathFunctions = {
 
     // 고유 번호를 받을 때까지 대기
     const waitTimer = setInterval(() => {
-      const innerelem: any = (document.querySelector('head > script:nth-child(8)') as any).innerText?.toString().includes('kwcommons.kw.ac.kr')
+      const innerelem: any = (document.querySelector('head > script:nth-child(8)') as any)?.innerText?.toString().includes('kwcommons.kw.ac.kr')
         ? document.querySelector('head > script:nth-child(8)')
         : document.querySelector('head > script:nth-child(7)');
       const videoCode = innerelem.innerText.toString().split('https://kwcommons.kw.ac.kr/em/')[1].split('"')[0];
