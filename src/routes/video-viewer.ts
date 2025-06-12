@@ -117,21 +117,41 @@ const renderVideoController = () => {
     }
 
     // AudioContext 초기화
-    if (!audioContext) {
-      try {
-        audioContext = new AudioContext();
-        const mediaElement = audioContext.createMediaElementSource(videoElement);
-        gainNode = audioContext.createGain();
-        gainNode.gain.value = 1; // 초기 gain 값 설정
-        mediaElement.connect(gainNode);
-        gainNode.connect(audioContext.destination);
+    const initializeAudioContext = (videoElement: HTMLVideoElement) => {
+      if (!audioContext) {
+        try {
+          audioContext = new AudioContext();
+          const mediaElement = audioContext.createMediaElementSource(videoElement as HTMLMediaElement);
+          gainNode = audioContext.createGain();
+          gainNode.gain.value = videoElement.volume; // 비디오의 현재 볼륨으로 초기화
+          mediaElement.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+        }
+        catch (error) {
+          console.error('AudioContext 초기화 실패:', error);
+          audioContext = null;
+          gainNode = null;
+        }
       }
-      catch (error) {
-        console.error('AudioContext 초기화 실패:', error);
-        audioContext = null;
-        gainNode = null;
+    };
+
+    // 비디오 재생 이벤트 리스너 추가
+    videoElement.addEventListener('play', () => {
+      if (!audioContext) {
+        initializeAudioContext(videoElement);
       }
-    }
+      // 재생 시 현재 볼륨 상태 동기화
+      if (gainNode) {
+        gainNode.gain.value = videoElement.volume;
+      }
+    });
+
+    // 볼륨 변경 이벤트 리스너 추가
+    videoElement.addEventListener('volumechange', () => {
+      if (gainNode) {
+        gainNode.gain.value = videoElement.volume;
+      }
+    });
 
     // 볼륨 슬라이더 이벤트 수정
     const volumeSlider = document.querySelector('.vc-pctrl-volume-slider');
@@ -210,6 +230,13 @@ const renderVideoController = () => {
               if (gainNode) {
                 gainNode.gain.value = volumePercent;
               }
+            }
+
+            // 볼륨이 0이 아닐 때 재생이 안 되는 문제 해결
+            if (videoElement.paused && volumePercent > 0) {
+              videoElement.play().catch((error) => {
+                console.error('비디오 재생 실패:', error);
+              });
             }
 
             // 슬라이더 게이지 업데이트 (시각적 피드백용)
