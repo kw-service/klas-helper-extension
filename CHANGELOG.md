@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.2.0.0 (2025.06.12)
+
+- [Added] 온라인 강의 인증시 번호를 자동으로 Trim 하도록 변경하였습니다. (https://github.com/kw-service/klas-helper-extension/pull/36)
+- [Added] 온라인 강의 진행시 볼륨 조절을 수동으로 하고, 최대 8배까지 조절할 수 있는 기능을 추가하였습니다. (https://github.com/kw-service/klas-helper-extension/pull/37)
+
 ## 2.1.2.0 (2025.05.10)
 
 - [Added] 졸업생 성적조회기능 대응 기능을 추가했습니다. (https://github.com/kw-service/klas-helper-extension/pull/32)
