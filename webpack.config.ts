@@ -46,6 +46,7 @@ const config: Configuration = {
       patterns: [
         { from: 'public', to: '.' },
         { from: 'manifest.json', to: '.' },
+        { from: 'packages/data/src/everytime-lectures/everytime-lectures.json', to: 'data/everytime-lectures.json' },
       ],
     }),
   ],

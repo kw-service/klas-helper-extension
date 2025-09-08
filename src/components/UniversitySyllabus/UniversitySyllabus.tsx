@@ -1,4 +1,4 @@
-import { type EverytimeLecture, everytimeLectures } from '@klas-helper/data';
+import { type EverytimeLecture, getEverytimeLectures } from '@klas-helper/data';
 import { Button, Card, Col, ConfigProvider, Empty, Input, Radio, Rate, Row, Select, Table, message } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -51,17 +51,27 @@ export function UniversitySyllabus() {
 
   const [lectures, setLectures] = useState<Lecture[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [everytimeLecturesData, setEverytimeLecturesData] = useState<EverytimeLecture[]>([]);
 
-  // 에브리타임 강의평 데이터 가져오기
+  // 에브리타임 강의평 데이터 비동기 로딩
+  useEffect(() => {
+    getEverytimeLectures()
+      .then(setEverytimeLecturesData)
+      .catch((error) => {
+        console.error('Failed to load everytime lectures:', error);
+      });
+  }, []);
+
+  // 에브리타임 강의평 데이터 맵 생성
   const everytimeLecturesMap = useMemo(() => {
     const map = new Map<string, EverytimeLecture>();
 
-    for (const everytimeLecture of everytimeLectures) {
+    for (const everytimeLecture of everytimeLecturesData) {
       map.set(`${everytimeLecture.name}-${everytimeLecture.professor}`, everytimeLecture);
     }
 
     return map;
-  }, []);
+  }, [everytimeLecturesData]);
 
   const transformedLectures = lectures.map((lecture) => ({
     ...lecture,
