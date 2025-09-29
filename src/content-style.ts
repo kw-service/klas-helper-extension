@@ -14,7 +14,7 @@ function main() {
       // 크롬 sync 스토리지 이용해 체크 여부 확인
       try {
         // dark mode 적용
-        browser.storage.sync.get(null, function (items) {
+        browser.storage.sync.get(null).then((items) => {
           // chrome namespace not supported
           if (items.useDark === undefined) {
             browser.storage.sync.set({ 'useDark': 'OFF' });
@@ -27,6 +27,8 @@ function main() {
             style.rel = 'stylesheet';
             document.querySelector('head')?.append(style);
           }
+        }).catch((error) => {
+          console.error('Error accessing storage:', error);
         });
       }
       catch (e) {
@@ -46,9 +48,9 @@ function main() {
 
 // 크롬 sync 스토리지 이용해 체크 여부 확인
 try {
-  browser.storage.sync.get('currentState', function (items) {
+  browser.storage.sync.get('currentState').then((items) => {
     // chrome namespace not supported
-    if (items === undefined) {
+    if (items === undefined || Object.keys(items).length === 0) {
       main();
     }
     else if (items.currentState === undefined) {
@@ -58,6 +60,9 @@ try {
     else if (items.currentState === 'ON') {
       main();
     }
+  }).catch((error) => {
+    console.error('Error accessing storage:', error);
+    main();
   });
 }
 catch (e) {

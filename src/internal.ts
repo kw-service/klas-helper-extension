@@ -176,7 +176,7 @@ export const internalPathFunctions = {
     const changeTimeTable = () => {
       const element = document.getElementsByClassName('form-control')[0];
       try {
-        browser.storage.sync.get(null, function (items) {
+        browser.storage.sync.get(null).then((items) => {
           if (items.timeTableIdx === undefined) {
             browser.storage.sync.set({ 'timeTableIdx': 0 });
           }
@@ -184,6 +184,8 @@ export const internalPathFunctions = {
             (element as any).selectedIndex = items.timeTableIdx;
             element.dispatchEvent(new Event('change'));
           }
+        }).catch((error) => {
+          console.error('Error accessing storage:', error);
         });
       }
       catch (e) {

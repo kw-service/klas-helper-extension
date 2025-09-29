@@ -13,9 +13,9 @@ if (!darkBtn) {
   throw new Error('Dark button not found');
 }
 
-browser.storage.sync.get(null, function (items) {
+browser.storage.sync.get(null).then((items) => {
   // Toggle button not supprted in Firefox
-  if (items === undefined) {
+  if (items === undefined || Object.keys(items).length === 0) {
     const supportAlert = document.querySelector<HTMLDivElement>('.support-alert');
 
     if (!supportAlert) {
@@ -59,6 +59,10 @@ browser.storage.sync.get(null, function (items) {
   else if (items.useDark === 'ON') {
     darkBtn.checked = true;
   }
+}).catch((error) => {
+  console.error('Error accessing storage:', error);
+  // Fallback behavior
+  activeBtn.checked = true;
 });
 
 activeBtn.onclick = function () {

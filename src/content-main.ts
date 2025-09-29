@@ -11,9 +11,9 @@ function jsCache(filePath: string) {
 (async () => {
   // 크롬 sync 스토리지 이용해 체크 여부 확인
   try {
-    browser.storage.sync.get('currentState', function (items) {
+    browser.storage.sync.get('currentState').then((items) => {
       // chrome namespace not supported
-      if (items === undefined) {
+      if (items === undefined || Object.keys(items).length === 0) {
         main();
       }
       else if (items.currentState === undefined) {
@@ -23,6 +23,9 @@ function jsCache(filePath: string) {
       else if (items.currentState === 'ON') {
         main();
       }
+    }).catch((error) => {
+      console.error('Error accessing storage:', error);
+      main();
     });
   }
   catch (e) {
