@@ -1,11 +1,11 @@
 {
   "name": "KLAS Helper",
-  "manifest_version": 3,
+  "manifest_version": 2,
   "version": "2.2.0.0",
   "description": "광운대학교 KLAS 사이트에 편리한 기능을 추가하는 브라우저 확장 프로그램",
   "homepage_url": "https://github.com/klas-helper/klas-helper-extension",
-  "permissions": ["storage"],
-  "action": {
+  "permissions": ["storage", "https://klas.kw.ac.kr/*", "https://kwcommons.kw.ac.kr/*"],
+  "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
       "16": "assets/images/icon-16x16.png",
@@ -39,30 +39,24 @@
     }
   ],
   "web_accessible_resources": [
-    {
-      "matches": ["https://klas.kw.ac.kr/*", "https://kwcommons.kw.ac.kr/*"],
-      "resources": [
-        "assets/js/jszip.min.js",
-        "assets/js/FileSaver.js",
-        "assets/js/Chart.min.js",
-        "assets/js/jquery.modal.min.js",
-        "assets/css/jquery.modal.min.css",
-        "dark.css",
-        "app.js",
-        "app.css"
-      ]
-    },
-    {
-      "matches": ["https://kwcommons.kw.ac.kr/*"],
-      "resources": [
-        "video-viewer.js"
-      ]
-    }
+    "assets/js/jszip.min.js",
+    "assets/js/FileSaver.js",
+    "assets/js/Chart.min.js",
+    "assets/js/jquery.modal.min.js",
+    "assets/css/jquery.modal.min.css",
+    "dark.css",
+    "app.js",
+    "app.css",
+    "video-viewer.js"
   ],
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["background.js"],
+    "persistent": false
   },
   "browser_specific_settings": {
+    "safari": {
+      "strict_min_version": "14"
+    },
     "gecko": {
       "update_url": "https://raw.githubusercontent.com/klas-helper/klas-helper-extension/main/update/manifest.json"
     }

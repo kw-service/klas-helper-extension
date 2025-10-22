@@ -84,24 +84,48 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 browser.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   if (msg.action === 'updateIcon') {
     if (msg.value === 'disabled') {
-      browser.action.setIcon({
-        path: {
-          16: '/assets/images/icon-disabled-16x16.png',
-          32: '/assets/images/icon-disabled-32x32.png',
-          48: '/assets/images/icon-disabled-48x48.png',
-          128: '/assets/images/icon-disabled-128x128.png',
-        },
-      });
+      // Safari 호환성을 위해 browserAction 사용
+      if (browser.browserAction) {
+        browser.browserAction.setIcon({
+          path: {
+            16: 'assets/images/icon-disabled-16x16.png',
+            32: 'assets/images/icon-disabled-32x32.png',
+            48: 'assets/images/icon-disabled-48x48.png',
+            128: 'assets/images/icon-disabled-128x128.png',
+          },
+        });
+      } else if (browser.action) {
+        browser.action.setIcon({
+          path: {
+            16: 'assets/images/icon-disabled-16x16.png',
+            32: 'assets/images/icon-disabled-32x32.png',
+            48: 'assets/images/icon-disabled-48x48.png',
+            128: 'assets/images/icon-disabled-128x128.png',
+          },
+        });
+      }
     }
     else {
-      browser.action.setIcon({
-        path: {
-          16: '/assets/images/icon-16x16.png',
-          32: '/assets/images/icon-32x32.png',
-          48: '/assets/images/icon-48x48.png',
-          128: '/assets/images/icon-128x128.png',
-        },
-      });
+      // Safari 호환성을 위해 browserAction 사용
+      if (browser.browserAction) {
+        browser.browserAction.setIcon({
+          path: {
+            16: 'assets/images/icon-16x16.png',
+            32: 'assets/images/icon-32x32.png',
+            48: 'assets/images/icon-48x48.png',
+            128: 'assets/images/icon-128x128.png',
+          },
+        });
+      } else if (browser.action) {
+        browser.action.setIcon({
+          path: {
+            16: 'assets/images/icon-16x16.png',
+            32: 'assets/images/icon-32x32.png',
+            48: 'assets/images/icon-48x48.png',
+            128: 'assets/images/icon-128x128.png',
+          },
+        });
+      }
     }
   }
 });
