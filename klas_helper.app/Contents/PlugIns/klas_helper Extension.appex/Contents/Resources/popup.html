@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="./popup.css">
+	<link rel="stylesheet" href="./switch.css">
+    <title>KLAS Helper Standalone</title>
+</head>
+<body>
+    <h1>🎠 광운대학교 KLAS Helper 확장 프로그램 </h1>
+	<p> 광운대학교 KLAS 사이트에 편리한 기능을 추가합니다. </p>
+	<label class="switch">
+		<input class="toggle-btn-active" type="checkbox">
+		<span class="slider round"></span>
+	</label>
+	<div style="padding-top: 0px;">
+		<span style="font-size: 12px;" class="support-alert"></span>
+	</div>
+	<div style="display:flex; align-items: flex-end; justify-content: space-between;">
+		<div style="float: left; justify-content:center;">
+			<a class="github-link" href="https://github.com/klas-helper/klas-helper" target="_blank">
+				<img src="./assets/images/github.png" style="width:25px; height:25px" /> KLAS Helper Github 
+			</a>
+			<a class="github-link" href="https://github.com/klas-helper/klas-helper-extension" target="_blank">
+				<img src="./assets/images/github.png" style="width:25px; height:25px" /> KLAS Helper 확장프로그램 Github 
+			</a>
+		</div>
+		<div style="display:flex; flex-direction:column; width: 120px;">
+			<div style="float: right; padding: 3px; justify-content:space-between; display:flex; align-items:center; flex-direction: row-reverse;">
+				<span style="font-size: 12px;">현재 버전 : <a style="font-size: 12px;" class="version"></a></span>
+			</div>
+			<div style="float: right; padding: 3px; justify-content:space-between; display:flex; align-items:center">
+				<label class="switch-small">
+					<input class="toggle-btn-dark" type="checkbox">
+					<span class="slider-small round"></span>
+				</label>
+				<span style="font-size: 12px;">다크 테마 적용</span>
+			</div>
+
+			
+			
+			<!--<div style="float: right; padding: 3px; justify-content:space-between; display:flex; align-items:center">
+				<label class="switch-small">
+					<input class="toggle-btn-debug" type="checkbox">
+					<span class="slider-small round"></span>
+				</label>
+				<div class="tooltip">
+					<img class="tooltip-oval" src="./assets/help-circle.png" style="width:15px; height:15px;" />
+					<span class="tooltiptext tooltip-right">개발자 이외엔 사용하지 말아주세요.</span>
+				</div>
+				<span style="font-size: 12px;">디버그 모드</span>
+			</div> -->
+
+		</div>
+	</div>
+</body>
+<script src="popup.js"></script>
+</html>

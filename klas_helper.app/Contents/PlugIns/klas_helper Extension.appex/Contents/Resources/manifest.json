@@ -1,0 +1,64 @@
+{
+  "name": "KLAS Helper",
+  "manifest_version": 2,
+  "version": "2.2.0.0",
+  "description": "광운대학교 KLAS 사이트에 편리한 기능을 추가하는 브라우저 확장 프로그램",
+  "homepage_url": "https://github.com/klas-helper/klas-helper-extension",
+  "permissions": ["storage", "https://klas.kw.ac.kr/*", "https://kwcommons.kw.ac.kr/*"],
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "assets/images/icon-16x16.png",
+      "32": "assets/images/icon-32x32.png",
+      "48": "assets/images/icon-48x48.png",
+      "128": "assets/images/icon-128x128.png"
+    }
+  },
+  "icons": {
+    "16": "assets/images/icon-16x16.png",
+    "32": "assets/images/icon-32x32.png",
+    "48": "assets/images/icon-48x48.png",
+    "128": "assets/images/icon-128x128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://klas.kw.ac.kr/*"],
+      "js": ["content-style.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://klas.kw.ac.kr/*"],
+      "js": ["content-main.js"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": ["https://kwcommons.kw.ac.kr/*"],
+      "js": ["content-video.js"],
+      "run_at": "document_end",
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": [
+    "assets/js/jszip.min.js",
+    "assets/js/FileSaver.js",
+    "assets/js/Chart.min.js",
+    "assets/js/jquery.modal.min.js",
+    "assets/css/jquery.modal.min.css",
+    "dark.css",
+    "app.js",
+    "app.css",
+    "video-viewer.js"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "browser_specific_settings": {
+    "safari": {
+      "strict_min_version": "14"
+    },
+    "gecko": {
+      "update_url": "https://raw.githubusercontent.com/klas-helper/klas-helper-extension/main/update/manifest.json"
+    }
+  }
+}
