@@ -161,7 +161,7 @@ export default () => {
         const nowDate = new Date();
 
         for (const lecture of responseData) {
-          if (lecture.evltnSe !== 'lesson' || lecture.prog === 100) {
+          if (lecture.evltnSe !== 'lesson' || lecture.prog === 100 || lecture.isonoff === 'OFF') {
             continue;
           }
 
