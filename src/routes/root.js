@@ -171,5 +171,31 @@ export default () => {
         <a href="/std/ext/grdtn/GrdtnYnImprtyResnStdPage.do">졸업가부 및 졸업불가사유 확인</a>
       </li>
     `);
+
+    // 이미지 크기 조정 단추 생성(클릭 시 이미지 너비를 100%로 변경)
+    let imageSizeModBtn = document.createElement('button');
+    imageSizeModBtn.id = 'imageSizeMod';
+    imageSizeModBtn.className = 'btn-gray';
+    imageSizeModBtn.innerText = '이미지 크기 조정';
+    imageSizeModBtn.style.marginLeft = '15px';
+    imageSizeModBtn.addEventListener('click', function () {
+      let img = document.querySelectorAll('p img');	//actual
+      for (let x = 0; x < img.length; x++) {
+        img[x].style.maxWidth = '100%';
+        img[x].style.maxHeight = '100%';
+        img[x].style.cursor = 'zoom-in';
+        img[x].onclick = function () {
+          let win = window.open('');
+          win.document.title = '이미지 원본 보기';
+          win.document.body.innerHTML = '<div id="button"><button onclick="window.close()">이미지 닫기 Close image</button></div>	<div id="imgview"><img src="' + this.src + '" alt="show-img-big"/></div>	<style>#button{width: 100%; height: 5%;} button{width: 100%; height: 100%; font-size: 3vh;} #imgview{width: 100%; height: 95%;} img{object-fit: contain;} </style>';
+        };
+      }
+    });
+    if (document.querySelector('.board_viewInfo')) {
+      document.querySelector('.board_viewInfo').append(imageSizeModBtn);
+    }
+    else if (document.querySelector('.contsubtitle')) {
+      document.querySelector('.contsubtitle').append(imageSizeModBtn);
+    }
   }
 };
