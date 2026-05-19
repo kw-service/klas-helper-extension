@@ -272,7 +272,7 @@ export default () => {
           const endDate = new Date(quiz.edt);
           const hourGap = Math.floor((endDate - nowDate) / 3600000);
 
-          if (hourGap < 0) {
+          if (!Number.isFinite(hourGap) || hourGap < 0) {
             continue;
           }
 
