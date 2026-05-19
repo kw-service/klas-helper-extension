@@ -319,7 +319,7 @@ export default () => {
         item.lecture.remainingTime,
         item.homework.remainingTime,
         item.quiz.remainingTime,
-        item.teamProject.remainingTime,
+        item.teamProject.remainingTime
       );
 
       const sortedDeadline = Object.values(deadline).sort((left, right) => {
