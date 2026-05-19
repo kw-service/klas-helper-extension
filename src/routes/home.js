@@ -160,12 +160,18 @@ export default () => {
           selectChangeYn: 'Y',
         }));
 
-        // 퀴즈를 가져올 주소 설정
-        promises.push(axios.post('/std/lis/evltn/QuizStdList.do', {
+        // 퀴즈를 가져올 주소 설정 (실패해도 나머지 데이터에 영향 없도록 catch 처리)
+        promises.push(axios.post('/std/lis/evltn/AnytmQuizStdList.do', {
           selectSubj: subject.subj,
           selectYearhakgi: subject.yearhakgi,
           selectChangeYn: 'Y',
-        }));
+        }).catch(() => ({
+          data: [],
+          config: {
+            url: '/std/lis/evltn/AnytmQuizStdList.do',
+            data: JSON.stringify({ selectSubj: subject.subj }),
+          },
+        })));
       }
 
       // 온라인 강의 파싱 함수
@@ -283,7 +289,7 @@ export default () => {
               parseHomework(subjectCode, response.data, 'TP');
               break;
 
-            case '/std/lis/evltn/QuizStdList.do':
+            case '/std/lis/evltn/AnytmQuizStdList.do':
               parseHomework(subjectCode, response.data, 'QZ');
               break;
           }
@@ -337,7 +343,7 @@ export default () => {
           if (cur.quiz.remainingTime < cur.homework.remainingTime) {
             remainingTime = cur.quiz.remainingTime;
             remainingCount = cur.quiz.remainingCount;
-            url = '/std/lis/evltn/QuizStdPage.do';
+            url = '/std/lis/evltn/AnytmQuizStdPage.do';
           }
           else if (cur.homework.remainingTime < cur.quiz.remainingTime) {
             remainingTime = cur.homework.remainingTime;
