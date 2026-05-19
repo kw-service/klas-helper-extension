@@ -256,17 +256,35 @@ export default () => {
 
             deadline[subjectCode].teamProject.totalCount++;
           }
-          else if (homeworkType === 'QZ') {
-            if (deadline[subjectCode].quiz.remainingTime > hourGap) {
-              deadline[subjectCode].quiz.remainingTime = hourGap;
-              deadline[subjectCode].quiz.remainingCount = 1;
-            }
-            else if (deadline[subjectCode].quiz.remainingTime === hourGap) {
-              deadline[subjectCode].quiz.remainingCount++;
-            }
+          isExistDeadline = true;
+        }
+      };
 
-            deadline[subjectCode].quiz.totalCount++;
+      // 퀴즈 파싱 함수
+      const parseQuiz = (subjectCode, responseData) => {
+        const nowDate = new Date();
+
+        for (const quiz of responseData) {
+          if (quiz.issubmit === 'Y') {
+            continue;
           }
+
+          const endDate = new Date(quiz.edt);
+          const hourGap = Math.floor((endDate - nowDate) / 3600000);
+
+          if (hourGap < 0) {
+            continue;
+          }
+
+          if (deadline[subjectCode].quiz.remainingTime > hourGap) {
+            deadline[subjectCode].quiz.remainingTime = hourGap;
+            deadline[subjectCode].quiz.remainingCount = 1;
+          }
+          else if (deadline[subjectCode].quiz.remainingTime === hourGap) {
+            deadline[subjectCode].quiz.remainingCount++;
+          }
+
+          deadline[subjectCode].quiz.totalCount++;
           isExistDeadline = true;
         }
       };
@@ -290,7 +308,7 @@ export default () => {
               break;
 
             case '/std/lis/evltn/AnytmQuizStdList.do':
-              parseHomework(subjectCode, response.data, 'QZ');
+              parseQuiz(subjectCode, response.data);
               break;
           }
         }
