@@ -326,6 +326,34 @@ export default () => {
         return getMinTime(left) - getMinTime(right);
       });
 
+      // 테이블 구조 초기화 (재호출 시 중복 방지)
+      $('#yes-deadline colgroup').html(`
+        <col width="21%">
+        <col width="25%">
+        <col width="25%">
+        <col width="25%">
+      `);
+      $('#yes-deadline thead tr').html(`
+        <td></td>
+        <td>온라인 강의</td>
+        <td>과제</td>
+        <td>팀 프로젝트</td>
+      `);
+
+      // 미제출 퀴즈 존재 여부 확인 후 칼럼 동적 추가
+      const hasQuiz = Object.values(deadline).some((d) => d.quiz.totalCount > 0);
+
+      if (hasQuiz) {
+        $('#yes-deadline colgroup').html(`
+          <col width="20%">
+          <col width="20%">
+          <col width="20%">
+          <col width="20%">
+          <col width="20%">
+        `);
+        $('#yes-deadline thead tr td:nth-child(3)').after('<td>퀴즈</td>');
+      }
+
       // 내용 생성 함수
       const createContent = (name, info) => {
         if (info.remainingTime === Infinity) {
@@ -353,31 +381,6 @@ export default () => {
 
       // HTML 코드 생성
       const trCode = sortedDeadline.reduce((acc, cur) => {
-        // 과제 + 퀴즈 병합: 마감이 더 이른 쪽으로 링크 결정
-        const homeworkMerged = (() => {
-          const totalCount = cur.homework.totalCount + cur.quiz.totalCount;
-          let remainingTime, remainingCount, url;
-
-          if (cur.quiz.remainingTime < cur.homework.remainingTime) {
-            remainingTime = cur.quiz.remainingTime;
-            remainingCount = cur.quiz.remainingCount;
-            url = '/std/lis/evltn/AnytmQuizStdPage.do';
-          }
-          else if (cur.homework.remainingTime < cur.quiz.remainingTime) {
-            remainingTime = cur.homework.remainingTime;
-            remainingCount = cur.homework.remainingCount;
-            url = '/std/lis/evltn/TaskStdPage.do';
-          }
-          else {
-            // 동점이거나 둘 다 Infinity(항목 없음)
-            remainingTime = cur.homework.remainingTime;
-            remainingCount = cur.homework.remainingCount + cur.quiz.remainingCount;
-            url = '/std/lis/evltn/TaskStdPage.do';
-          }
-
-          return { remainingTime, remainingCount, totalCount, url };
-        })();
-
         acc += `
            <tr style="border-bottom: 1px solid #dce3eb; height: 30px">
              <td style="font-weight: bold">
@@ -389,10 +392,16 @@ export default () => {
                </span>
              </td>
              <td>
-               <span style="cursor: pointer" onclick="appModule.goLctrumBoard('${homeworkMerged.url}', '${cur.yearSemester}', '${cur.subjectCode}')">
-                 ${createContent('과제', homeworkMerged)}
+               <span style="cursor: pointer" onclick="appModule.goLctrumBoard('/std/lis/evltn/TaskStdPage.do', '${cur.yearSemester}', '${cur.subjectCode}')">
+                 ${createContent('과제', cur.homework)}
                </span>
              </td>
+             ${hasQuiz ? `
+             <td>
+               <span style="cursor: pointer" onclick="appModule.goLctrumBoard('/std/lis/evltn/AnytmQuizStdPage.do', '${cur.yearSemester}', '${cur.subjectCode}')">
+                 ${createContent('퀴즈', cur.quiz)}
+               </span>
+             </td>` : ''}
              <td>
                <span style="cursor: pointer" onclick="appModule.goLctrumBoard('/std/lis/evltn/PrjctStdPage.do', '${cur.yearSemester}', '${cur.subjectCode}')">
                  ${createContent('팀 프로젝트', cur.teamProject)}
