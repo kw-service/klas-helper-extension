@@ -132,6 +132,11 @@ export default () => {
             remainingCount: 0,
             totalCount: 0,
           },
+          quiz: {
+            remainingTime: Infinity,
+            remainingCount: 0,
+            totalCount: 0,
+          },
         };
 
         // 온라인 강의를 가져올 주소 설정
@@ -154,6 +159,19 @@ export default () => {
           selectYearhakgi: subject.yearhakgi,
           selectChangeYn: 'Y',
         }));
+
+        // 퀴즈를 가져올 주소 설정 (실패해도 나머지 데이터에 영향 없도록 catch 처리)
+        promises.push(axios.post('/std/lis/evltn/AnytmQuizStdList.do', {
+          selectSubj: subject.subj,
+          selectYearhakgi: subject.yearhakgi,
+          selectChangeYn: 'Y',
+        }).catch(() => ({
+          data: [],
+          config: {
+            url: '/std/lis/evltn/AnytmQuizStdList.do',
+            data: JSON.stringify({ selectSubj: subject.subj }),
+          },
+        })));
       }
 
       // 온라인 강의 파싱 함수
@@ -242,6 +260,35 @@ export default () => {
         }
       };
 
+      // 퀴즈 파싱 함수
+      const parseQuiz = (subjectCode, responseData) => {
+        const nowDate = new Date();
+
+        for (const quiz of responseData) {
+          if (quiz.issubmit === 'Y') {
+            continue;
+          }
+
+          const endDate = new Date(quiz.edt);
+          const hourGap = Math.floor((endDate - nowDate) / 3600000);
+
+          if (!Number.isFinite(hourGap) || hourGap < 0) {
+            continue;
+          }
+
+          if (deadline[subjectCode].quiz.remainingTime > hourGap) {
+            deadline[subjectCode].quiz.remainingTime = hourGap;
+            deadline[subjectCode].quiz.remainingCount = 1;
+          }
+          else if (deadline[subjectCode].quiz.remainingTime === hourGap) {
+            deadline[subjectCode].quiz.remainingCount++;
+          }
+
+          deadline[subjectCode].quiz.totalCount++;
+          isExistDeadline = true;
+        }
+      };
+
       // 해당 과목의 마감 정보 얻기
       await axios.all(promises).then((results) => {
         for (const response of results) {
@@ -259,25 +306,53 @@ export default () => {
             case '/std/lis/evltn/PrjctStdList.do':
               parseHomework(subjectCode, response.data, 'TP');
               break;
+
+            case '/std/lis/evltn/AnytmQuizStdList.do':
+              parseQuiz(subjectCode, response.data);
+              break;
           }
         }
       });
 
       // 마감이 빠른 순으로 정렬
+      const getMinTime = (item) => Math.min(
+        item.lecture.remainingTime,
+        item.homework.remainingTime,
+        item.quiz.remainingTime,
+        item.teamProject.remainingTime
+      );
+
       const sortedDeadline = Object.values(deadline).sort((left, right) => {
-        const minLeft = left.lecture.remainingTime < left.lecture.remainingTime ? left.lecture : left.homework;
-        const minRight = right.lecture.remainingTime < right.lecture.remainingTime ? right.lecture : right.homework;
-
-        if (minLeft.remainingTime !== minRight.remainingTime) {
-          return minLeft.remainingTime - minRight.remainingTime;
-        }
-
-        if (minLeft.remainingCount !== minRight.remainingCount) {
-          return minRight.remainingCount - minLeft.remainingCount;
-        }
-
-        return (right.lecture.remainingCount + right.homework.remainingCount) - (left.lecture.remainingCount + left.homework.remainingCount);
+        return getMinTime(left) - getMinTime(right);
       });
+
+      // 테이블 구조 초기화 (재호출 시 중복 방지)
+      $('#yes-deadline colgroup').html(`
+        <col width="21%">
+        <col width="25%">
+        <col width="25%">
+        <col width="25%">
+      `);
+      $('#yes-deadline thead tr').html(`
+        <td></td>
+        <td>온라인 강의</td>
+        <td>과제</td>
+        <td>팀 프로젝트</td>
+      `);
+
+      // 미제출 퀴즈 존재 여부 확인 후 칼럼 동적 추가
+      const hasQuiz = Object.values(deadline).some((d) => d.quiz.totalCount > 0);
+
+      if (hasQuiz) {
+        $('#yes-deadline colgroup').html(`
+          <col width="20%">
+          <col width="20%">
+          <col width="20%">
+          <col width="20%">
+          <col width="20%">
+        `);
+        $('#yes-deadline thead tr td:nth-child(3)').after('<td>퀴즈</td>');
+      }
 
       // 내용 생성 함수
       const createContent = (name, info) => {
@@ -319,12 +394,18 @@ export default () => {
              <td>
                <span style="cursor: pointer" onclick="appModule.goLctrumBoard('/std/lis/evltn/TaskStdPage.do', '${cur.yearSemester}', '${cur.subjectCode}')">
                  ${createContent('과제', cur.homework)}
-               <span>
+               </span>
              </td>
+             ${hasQuiz ? `
+             <td>
+               <span style="cursor: pointer" onclick="appModule.goLctrumBoard('/std/lis/evltn/AnytmQuizStdPage.do', '${cur.yearSemester}', '${cur.subjectCode}')">
+                 ${createContent('퀴즈', cur.quiz)}
+               </span>
+             </td>` : ''}
              <td>
                <span style="cursor: pointer" onclick="appModule.goLctrumBoard('/std/lis/evltn/PrjctStdPage.do', '${cur.yearSemester}', '${cur.subjectCode}')">
                  ${createContent('팀 프로젝트', cur.teamProject)}
-               <span>
+               </span>
              </td>
            </tr>
          `;
