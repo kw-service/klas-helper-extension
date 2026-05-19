@@ -132,6 +132,11 @@ export default () => {
             remainingCount: 0,
             totalCount: 0,
           },
+          quiz: {
+            remainingTime: Infinity,
+            remainingCount: 0,
+            totalCount: 0,
+          },
         };
 
         // 온라인 강의를 가져올 주소 설정
@@ -150,6 +155,13 @@ export default () => {
 
         // 팀 프로젝트를 가져올 주소 설정
         promises.push(axios.post('/std/lis/evltn/PrjctStdList.do', {
+          selectSubj: subject.subj,
+          selectYearhakgi: subject.yearhakgi,
+          selectChangeYn: 'Y',
+        }));
+
+        // 퀴즈를 가져올 주소 설정
+        promises.push(axios.post('/std/lis/evltn/QuizStdList.do', {
           selectSubj: subject.subj,
           selectYearhakgi: subject.yearhakgi,
           selectChangeYn: 'Y',
@@ -238,6 +250,17 @@ export default () => {
 
             deadline[subjectCode].teamProject.totalCount++;
           }
+          else if (homeworkType === 'QZ') {
+            if (deadline[subjectCode].quiz.remainingTime > hourGap) {
+              deadline[subjectCode].quiz.remainingTime = hourGap;
+              deadline[subjectCode].quiz.remainingCount = 1;
+            }
+            else if (deadline[subjectCode].quiz.remainingTime === hourGap) {
+              deadline[subjectCode].quiz.remainingCount++;
+            }
+
+            deadline[subjectCode].quiz.totalCount++;
+          }
           isExistDeadline = true;
         }
       };
@@ -259,24 +282,24 @@ export default () => {
             case '/std/lis/evltn/PrjctStdList.do':
               parseHomework(subjectCode, response.data, 'TP');
               break;
+
+            case '/std/lis/evltn/QuizStdList.do':
+              parseHomework(subjectCode, response.data, 'QZ');
+              break;
           }
         }
       });
 
       // 마감이 빠른 순으로 정렬
+      const getMinTime = (item) => Math.min(
+        item.lecture.remainingTime,
+        item.homework.remainingTime,
+        item.quiz.remainingTime,
+        item.teamProject.remainingTime,
+      );
+
       const sortedDeadline = Object.values(deadline).sort((left, right) => {
-        const minLeft = left.lecture.remainingTime < left.lecture.remainingTime ? left.lecture : left.homework;
-        const minRight = right.lecture.remainingTime < right.lecture.remainingTime ? right.lecture : right.homework;
-
-        if (minLeft.remainingTime !== minRight.remainingTime) {
-          return minLeft.remainingTime - minRight.remainingTime;
-        }
-
-        if (minLeft.remainingCount !== minRight.remainingCount) {
-          return minRight.remainingCount - minLeft.remainingCount;
-        }
-
-        return (right.lecture.remainingCount + right.homework.remainingCount) - (left.lecture.remainingCount + left.homework.remainingCount);
+        return getMinTime(left) - getMinTime(right);
       });
 
       // 내용 생성 함수
@@ -306,6 +329,31 @@ export default () => {
 
       // HTML 코드 생성
       const trCode = sortedDeadline.reduce((acc, cur) => {
+        // 과제 + 퀴즈 병합: 마감이 더 이른 쪽으로 링크 결정
+        const homeworkMerged = (() => {
+          const totalCount = cur.homework.totalCount + cur.quiz.totalCount;
+          let remainingTime, remainingCount, url;
+
+          if (cur.quiz.remainingTime < cur.homework.remainingTime) {
+            remainingTime = cur.quiz.remainingTime;
+            remainingCount = cur.quiz.remainingCount;
+            url = '/std/lis/evltn/QuizStdPage.do';
+          }
+          else if (cur.homework.remainingTime < cur.quiz.remainingTime) {
+            remainingTime = cur.homework.remainingTime;
+            remainingCount = cur.homework.remainingCount;
+            url = '/std/lis/evltn/TaskStdPage.do';
+          }
+          else {
+            // 동점이거나 둘 다 Infinity(항목 없음)
+            remainingTime = cur.homework.remainingTime;
+            remainingCount = cur.homework.remainingCount + cur.quiz.remainingCount;
+            url = '/std/lis/evltn/TaskStdPage.do';
+          }
+
+          return { remainingTime, remainingCount, totalCount, url };
+        })();
+
         acc += `
            <tr style="border-bottom: 1px solid #dce3eb; height: 30px">
              <td style="font-weight: bold">
@@ -317,14 +365,14 @@ export default () => {
                </span>
              </td>
              <td>
-               <span style="cursor: pointer" onclick="appModule.goLctrumBoard('/std/lis/evltn/TaskStdPage.do', '${cur.yearSemester}', '${cur.subjectCode}')">
-                 ${createContent('과제', cur.homework)}
-               <span>
+               <span style="cursor: pointer" onclick="appModule.goLctrumBoard('${homeworkMerged.url}', '${cur.yearSemester}', '${cur.subjectCode}')">
+                 ${createContent('과제', homeworkMerged)}
+               </span>
              </td>
              <td>
                <span style="cursor: pointer" onclick="appModule.goLctrumBoard('/std/lis/evltn/PrjctStdPage.do', '${cur.yearSemester}', '${cur.subjectCode}')">
                  ${createContent('팀 프로젝트', cur.teamProject)}
-               <span>
+               </span>
              </td>
            </tr>
          `;
