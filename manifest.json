@@ -48,6 +48,7 @@
         "assets/js/jquery.modal.min.js",
         "assets/css/jquery.modal.min.css",
         "dark.css",
+        "imgSize.css",
         "app.js",
         "app.css",
         "data/everytime-lectures.json"
