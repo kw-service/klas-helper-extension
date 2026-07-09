@@ -2,6 +2,7 @@ import { browser } from './core/browser';
 
 const activeBtn = document.querySelector<HTMLInputElement>('.toggle-btn-active');
 const darkBtn = document.querySelector<HTMLInputElement>('.toggle-btn-dark');
+const imgSizeBtn = document.querySelector<HTMLInputElement>('.toggle-btn-imgSize');
 const debugBtn = document.querySelector('.toggle-btn-debug');
 const betaBtn = document.querySelector('.toggle-btn-beta');
 
@@ -11,6 +12,10 @@ if (!activeBtn) {
 
 if (!darkBtn) {
   throw new Error('Dark button not found');
+}
+
+if (!imgSizeBtn) {
+  throw new Error('imgSize button not found');
 }
 
 browser.storage.sync.get(null).then((items) => {
@@ -59,6 +64,17 @@ browser.storage.sync.get(null).then((items) => {
   else if (items.useDark === 'ON') {
     darkBtn.checked = true;
   }
+
+  // 이미지 크기 조정 여부
+  if (items.useImgSize === undefined) {
+    browser.storage.sync.set({ useImgSize: 'OFF' });
+  }
+  else if (items.useImgSize === 'OFF') {
+    imgSizeBtn.checked = false;
+  }
+  else if (items.useImgSize === 'ON') {
+    imgSizeBtn.checked = true;
+  }
 }).catch((error) => {
   console.error('Error accessing storage:', error);
   // Fallback behavior
@@ -88,6 +104,15 @@ darkBtn.onclick = function () {
   }
   else {
     browser.storage.sync.set({ useDark: 'OFF' });
+  }
+};
+
+imgSizeBtn.onclick = function () {
+  if (imgSizeBtn.checked) {
+    browser.storage.sync.set({ useImgSize: 'ON' });
+  }
+  else {
+    browser.storage.sync.set({ useImgSize: 'OFF' });
   }
 };
 

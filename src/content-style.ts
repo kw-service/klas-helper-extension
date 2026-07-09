@@ -35,6 +35,40 @@ function main() {
 
       }
 
+      // 크롬 sync 스토리지 이용해 체크 여부 확인
+      try {
+        // 이미지 크기 조정 적용
+        browser.storage.sync.get(null).then((items) => {
+          // chrome namespace not supported
+          if (items.useImgSize === undefined) {
+            browser.storage.sync.set({ 'useImgSize': 'OFF' });
+          }
+          else if (items.useImgSize === 'ON') {
+            //   이미지 크기 조정 css 삽입
+            const style = document.createElement('link');
+            style.href = browser.runtime.getURL('imgSize.css');
+            style.type = 'text/css';
+            style.rel = 'stylesheet';
+            document.querySelector('head')?.append(style);
+
+            //   이미지 클릭 시 원본 보기
+            document.addEventListener('click', function (event) {
+              if (event.target instanceof HTMLImageElement) {
+                if (event.target.tagName === 'IMG' && event.target.closest('p')) {
+                  event.preventDefault();
+                  imgClick(event.target);
+                }
+              }
+            }, true);
+          }
+        }).catch((error) => {
+          console.error('Error accessing storage:', error);
+        });
+      }
+      catch (e) {
+
+      }
+
       document_observer.disconnect();
     }
   });
@@ -69,3 +103,36 @@ catch (e) {
   main();
 }
 
+/**
+ * @param {HTMLImageElement} img 클릭한 이미지 element
+ * @description 이미지 클릭 시 새 탭에 원본 이미지를 출력해 주는 함수
+ */
+function imgClick(img: HTMLImageElement) {
+  let win = window.open('') as Window;
+  if (!win) {
+    return;
+  }
+
+  win.document.title = '이미지 원본 보기';
+  let close_btn = document.createElement('button');
+  close_btn.id = 'close';
+  close_btn.innerText = '이미지 닫기 Close image';
+  close_btn.style.width = '100%';
+  close_btn.style.height = '5%';
+  close_btn.style.marginBottom = '5px';
+  close_btn.style.fontSize = '2.5vh';
+  close_btn.style.backgroundColor = '#666666';
+  close_btn.style.color = '#ffffff';
+  close_btn.style.border = '1px solid #666';
+  close_btn.style.borderBottom = '1px solid #555';
+  close_btn.style.borderRight = '1px solid #5b5b5b';
+  close_btn.style.cursor = 'pointer';
+  win.document.body.appendChild(close_btn);
+
+  let imgView = win.document.createElement('img');
+  imgView.src = img.src;
+  imgView.alt = 'show-img-original';
+  win.document.body.appendChild(imgView);
+
+  win.document.getElementById('close')?.addEventListener('click', () => win.close());
+}

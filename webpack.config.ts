@@ -22,6 +22,7 @@ const config: Configuration = {
     'content-video': './src/content-video.ts',
     'video-viewer': './src/routes/video-viewer.ts',
     dark: './src/styles/dark.scss',
+    imgSize: './src/styles/imgSize.scss',
   },
   module: {
     rules: [
