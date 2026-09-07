@@ -35,6 +35,18 @@ function jsCache(filePath: string) {
 
 async function main() {
   'use strict';
+
+  // BFCache가 이동 직전의 로딩 오버레이까지 복원하는 경우 제거
+  window.addEventListener('pageshow', (event) => {
+    if (!event.persisted) {
+      return;
+    }
+
+    document.querySelectorAll('.vld-overlay.is-active.is-full-page').forEach((overlay) => {
+      overlay.remove();
+    });
+  });
+
   const waitTimer = setInterval(() => {
     if (document.querySelector('.navtxt span:nth-child(1)')) {
       if (document.querySelector('.navtxt span:nth-child(2)')) {
