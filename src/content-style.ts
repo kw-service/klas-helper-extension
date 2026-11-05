@@ -1,6 +1,42 @@
 import { browser } from './core/browser';
 
+/** app.js(src/utils/unscheduledLectures.ts)와 같은 값을 사용해야 합니다 */
+const PREFERRED_YEARHAKGI_KEY = 'klasHelper.preferredYearhakgi';
+const TIMETABLE_HIDE_STYLE_ID = 'klas-helper-timetable-hide';
+
+/**
+ * 홈 화면에서 KLAS가 먼저 그리는 학기(예: 1학기)가 잠깐 보였다가
+ * 확장 프로그램이 추가한 학기(예: 현장실습 2학기)로 바뀌는 깜빡임을 막습니다.
+ * 지난 방문에서 가상 학기를 기본으로 보여 줬다면 시간표 영역을 잠시 숨기고,
+ * app.js가 준비되면 다시 보이게 합니다. 만약을 위해 일정 시간 뒤에는 무조건 보이게 합니다.
+ */
+function hideTimetableUntilReady() {
+  if (location.pathname !== '/std/cmn/frame/Frame.do') {
+    return;
+  }
+
+  try {
+    if (!localStorage.getItem(PREFERRED_YEARHAKGI_KEY)) {
+      return;
+    }
+  }
+  catch (e) {
+    return;
+  }
+
+  const style = document.createElement('style');
+  style.id = TIMETABLE_HIDE_STYLE_ID;
+  style.textContent = '#appModule .scheduletitle, #appModule .schedule { visibility: hidden; }';
+  (document.head || document.documentElement).appendChild(style);
+
+  setTimeout(() => {
+    document.getElementById(TIMETABLE_HIDE_STYLE_ID)?.remove();
+  }, 5000);
+}
+
 function main() {
+  hideTimetableUntilReady();
+
   var document_observer = new MutationObserver(function (mutations) {
     // 기본 css가 important가 되기 때문에, 모든 css파일이 로드가 된 후에 추가합니다.
     // 기본적으로 추가되는 head의 child가 27개이므로 전부다 로드가 되면 해당 css를 주입합니다.
