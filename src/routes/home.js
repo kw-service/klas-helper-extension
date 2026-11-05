@@ -5,6 +5,7 @@
 
 import { addListenerByTimer } from '../utils/dom';
 import {
+  VIRTUAL_ROW_FLAG,
   compareSemesterDesc,
   fetchUnscheduledLectures,
   guardGoLctrum,
@@ -34,7 +35,8 @@ const fillUnscheduledLectures = async () => {
   guardGoLctrum(appModule);
 
   let unscheduled = loadCachedUnscheduledLectures() ?? new Map();
-  let autoSelected = false;
+  // 확장 프로그램이 자동으로 선택한 학기 (사용자가 직접 고른 학기와 구분하기 위해 기록)
+  let autoSelectedValue = null;
   let pendingSelection = null;
 
   // 선택한 학기의 시간표에 없는 과목을 가상 행으로 덧붙입니다 (timeTableList가 바뀔 때마다 호출)
@@ -111,11 +113,20 @@ const fillUnscheduledLectures = async () => {
     setPreferredYearhakgi(isNewestVirtual ? newest.value : null);
 
     const selectElement = document.querySelector('.scheduletitle > select');
-    if (!isNewestVirtual || autoSelected || !selectElement || appModule.$data.searchYearhakgi !== yearhakgiList[1]?.value) {
+    if (!isNewestVirtual || !selectElement) {
       return false;
     }
 
-    autoSelected = true;
+    // KLAS가 기본으로 고른 학기(추가한 학기를 제외한 첫 학기)이거나 이전에 자동으로 고른 학기일 때만 최신 학기로 바꿉니다.
+    // 사용자가 직접 다른 학기를 고른 경우에는 그대로 둡니다.
+    const current = appModule.$data.searchYearhakgi;
+    const klasDefault = yearhakgiList.find((item) => !item[VIRTUAL_SEMESTER_FLAG])?.value;
+    const canSwitch = current === klasDefault || current === autoSelectedValue;
+    if (current === newest.value || !canSwitch) {
+      return false;
+    }
+
+    autoSelectedValue = newest.value;
     pendingSelection = newest.value;
     await appModule.$nextTick();
     selectElement.value = newest.value;
@@ -144,6 +155,11 @@ const fillUnscheduledLectures = async () => {
     saveCachedUnscheduledLectures(fresh);
 
     if (changed) {
+      // 캐시로 그려 둔 가상 행은 최신 데이터와 다를 수 있으므로 걷어낸 뒤 다시 적용합니다 (실제 행은 그대로 둡니다)
+      const current = appModule.$data.timeTableList;
+      if (hasVirtualRows(current)) {
+        appModule.timeTableList = current.filter((row) => !row[VIRTUAL_ROW_FLAG]);
+      }
       await run();
     }
   }

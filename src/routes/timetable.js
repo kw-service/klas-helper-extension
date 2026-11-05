@@ -99,21 +99,35 @@ export const handleTimeTable = () => {
  * 수업시간표 페이지에서 KLAS 시간표에 빠진 과목(현장실습, 교류 과목 등)을 가상 행으로 채웁니다.
  * 조회 학기가 바뀔 때마다 timeTableList가 교체되므로 $watch로 감지합니다.
  */
-const fillUnscheduledLectures = async () => {
-  let unscheduled;
-  try {
-    unscheduled = await fetchUnscheduledLectures();
-  }
-  catch (error) {
-    console.error('[KLAS Helper] 시간표 보완 데이터를 불러오지 못했습니다.', error);
-    return;
-  }
-
+const fillUnscheduledLectures = () => {
   guardGoLctrum(appModule);
+
+  let unscheduled = null;
+  let loading = null;
+
+  // 보완 데이터를 불러옵니다. 실패하면 다음 시간표 조회 때 다시 시도합니다 (동시에 한 번만 요청)
+  const load = () => {
+    if (!loading) {
+      loading = fetchUnscheduledLectures()
+        .then((result) => { unscheduled = result; })
+        .catch((error) => { console.error('[KLAS Helper] 시간표 보완 데이터를 불러오지 못했습니다.', error); })
+        .finally(() => { loading = null; });
+    }
+    return loading;
+  };
 
   const apply = () => {
     const timeTableList = appModule.$data.timeTableList;
     if (hasVirtualRows(timeTableList)) {
+      return;
+    }
+
+    if (!unscheduled) {
+      load().then(() => {
+        if (unscheduled) {
+          apply();
+        }
+      });
       return;
     }
 
