@@ -51,8 +51,11 @@ export const VIRTUAL_ROW_FLAG = 'klasHelperVirtual';
 /** 학기 값("2026,2")을 키로 하는, 시간표에 없는 과목 목록 */
 export type UnscheduledMap = Map<string, { label: string; isMissingSemester: boolean; lectures: UnscheduledLecture[] }>;
 
-/** 마지막 계산 결과를 저장하는 localStorage 키 (다음 방문 때 네트워크 응답을 기다리지 않고 바로 적용) */
-const CACHE_KEY = 'klasHelper.unscheduledLectures';
+/**
+ * 마지막 계산 결과를 저장하는 localStorage 키의 접두사 (다음 방문 때 네트워크 응답을 기다리지 않고 바로 적용)
+ * 같은 브라우저에서 다른 계정으로 로그인해도 이전 계정의 과목이 보이지 않도록 뒤에 학번을 붙여 계정별로 분리합니다.
+ */
+const CACHE_KEY_PREFIX = 'klasHelper.unscheduledLectures:';
 
 /** 홈 화면에서 기본으로 보여 줄 가상 학기 값을 저장하는 localStorage 키 (content-style에서 깜빡임 방지용으로 읽음) */
 export const PREFERRED_YEARHAKGI_KEY = 'klasHelper.preferredYearhakgi';
@@ -128,10 +131,38 @@ export const fetchUnscheduledLectures = async (yearhakgiList?: KlasYearhakgi[]):
 /** 두 결과가 같은지 비교하기 위한 직렬화 */
 export const serializeUnscheduled = (unscheduled: UnscheduledMap): string => JSON.stringify(Array.from(unscheduled));
 
-/** 마지막 계산 결과를 localStorage에서 읽습니다. 없거나 깨져 있으면 null */
+/** 상단 메뉴의 "이름(학번)" 링크에서 학번을 읽습니다. 찾지 못하면 null (root.js와 같은 요소 사용) */
+export const getStudentId = (): string | null => {
+  const text = document.querySelector('a[href*="/std/ads/admst/MyInfoStdPage.do"]')?.textContent ?? '';
+  const match = text.match(/\((\d{6,})\)/);
+  return match ? match[1] : null;
+};
+
+const getCacheKey = (): string | null => {
+  const studentId = getStudentId();
+  return studentId ? CACHE_KEY_PREFIX + studentId : null;
+};
+
+/** 현재 계정이 아닌 다른 계정의 캐시를 모두 지웁니다 */
+const removeOtherAccountCaches = (currentKey: string): void => {
+  const staleKeys: string[] = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith(CACHE_KEY_PREFIX) && key !== currentKey) {
+      staleKeys.push(key);
+    }
+  }
+  staleKeys.forEach((key) => localStorage.removeItem(key));
+};
+
+/** 현재 계정의 마지막 계산 결과를 localStorage에서 읽습니다. 학번을 모르거나 없거나 깨져 있으면 null */
 export const loadCachedUnscheduledLectures = (): UnscheduledMap | null => {
   try {
-    const raw = localStorage.getItem(CACHE_KEY);
+    const cacheKey = getCacheKey();
+    if (!cacheKey) {
+      return null;
+    }
+    const raw = localStorage.getItem(cacheKey);
     if (!raw) {
       return null;
     }
@@ -152,10 +183,15 @@ export const loadCachedUnscheduledLectures = (): UnscheduledMap | null => {
   }
 };
 
-/** 계산 결과를 localStorage에 저장합니다 */
+/** 계산 결과를 현재 계정의 캐시로 저장하고 다른 계정의 캐시는 지웁니다. 학번을 모르면 저장하지 않습니다 */
 export const saveCachedUnscheduledLectures = (unscheduled: UnscheduledMap): void => {
   try {
-    localStorage.setItem(CACHE_KEY, serializeUnscheduled(unscheduled));
+    const cacheKey = getCacheKey();
+    if (!cacheKey) {
+      return;
+    }
+    removeOtherAccountCaches(cacheKey);
+    localStorage.setItem(cacheKey, serializeUnscheduled(unscheduled));
   }
   catch (e) {
     // 저장 공간 부족 등은 무시 (다음 방문에 다시 계산)
