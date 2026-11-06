@@ -121,7 +121,9 @@ const compressScheduleHeader = () => {
       subtitle.classList.remove(COMPACT_CLASS);
 
       if (element.dataset.klasHelperOriginal && current === element.dataset.klasHelperCompressed && current !== element.dataset.klasHelperOriginal) {
-        textNode.nodeValue = textNode.nodeValue.replace(current, element.dataset.klasHelperOriginal);
+        // 함수로 치환해 문구 안의 $& 같은 특수 패턴이 해석되지 않게 합니다
+        const original = element.dataset.klasHelperOriginal;
+        textNode.nodeValue = textNode.nodeValue.replace(current, () => original);
       }
 
       delete element.dataset.klasHelperOriginal;
@@ -148,7 +150,8 @@ const compressScheduleHeader = () => {
     element.dataset.klasHelperCompressed = compressed;
 
     if (compressed !== current) {
-      textNode.nodeValue = textNode.nodeValue.replace(current, compressed);
+      // 함수로 치환해 문구 안의 $& 같은 특수 패턴이 해석되지 않게 합니다
+      textNode.nodeValue = textNode.nodeValue.replace(current, () => compressed);
     }
   };
 
