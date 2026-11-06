@@ -69,6 +69,22 @@ const addLecturePlan = async () => {
   });
   lectureElem.click(redirectLectureHandler);
   $('.subtitle').append(lectureElem);
+
+  // 계절학기처럼 시간표 문구가 길면 상단 막대 밖으로 줄바꿈되어 "강의계획서 조회"가 가려지므로,
+  // 한 줄로 유지하고 시간표 문구만 줄임표(...)로 줄여 버튼이 항상 보이게 합니다.
+  if (!document.getElementById('klas-helper-lecture-bar')) {
+    $('<style id="klas-helper-lecture-bar"></style>').text(`
+      .subjectnameba .subtitle { display: flex; align-items: baseline; white-space: nowrap; }
+      .subjectnameba .subtitle .subjectname { flex: none; }
+      .subjectnameba .subtitle .subjecttime { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+      .subjectnameba .subtitle .subjectLectureInfo { flex: none; }
+    `).appendTo('head');
+  }
+
+  // 줄여진 시간표 문구는 마우스를 올리면 전체 내용을 볼 수 있게 합니다 (과목을 바꿔도 항상 현재 문구를 사용)
+  $('.subtitle').on('mouseenter', '.subjecttime', function () {
+    this.title = this.textContent.trim();
+  });
 };
 
 export default () => {
