@@ -1,3 +1,4 @@
+import { compressScheduleText } from '../utils/scheduleText';
 import { generateRandomString } from '../utils/string';
 
 /**
@@ -70,21 +71,102 @@ const addLecturePlan = async () => {
   lectureElem.click(redirectLectureHandler);
   $('.subtitle').append(lectureElem);
 
-  // 계절학기처럼 시간표 문구가 길면 상단 막대 밖으로 줄바꿈되어 "강의계획서 조회"가 가려지므로,
-  // 한 줄로 유지하고 시간표 문구만 줄임표(...)로 줄여 버튼이 항상 보이게 합니다.
+  // 계절학기(여름·겨울)는 시간표 문구가 길어 상단 막대 밖으로 줄바꿈되면 "강의계획서 조회"가 가려지므로,
+  // 해당 학기에서만 한 줄로 유지하고 문구를 줄여 버튼이 항상 보이게 합니다. (1·2학기는 기존 모양 그대로)
   if (!document.getElementById('klas-helper-lecture-bar')) {
     $('<style id="klas-helper-lecture-bar"></style>').text(`
-      .subjectnameba .subtitle { display: flex; align-items: baseline; white-space: nowrap; }
-      .subjectnameba .subtitle .subjectname { flex: none; }
-      .subjectnameba .subtitle .subjecttime { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-      .subjectnameba .subtitle .subjectLectureInfo { flex: none; }
+      .subjectnameba .subtitle.${COMPACT_CLASS} { display: flex; align-items: baseline; white-space: nowrap; }
+      .subjectnameba .subtitle.${COMPACT_CLASS} .subjectname { flex: none; }
+      .subjectnameba .subtitle.${COMPACT_CLASS} .subjecttime { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+      .subjectnameba .subtitle.${COMPACT_CLASS} .subjectLectureInfo { flex: none; }
     `).appendTo('head');
   }
 
-  // 줄여진 시간표 문구는 마우스를 올리면 전체 내용을 볼 수 있게 합니다 (과목을 바꿔도 항상 현재 문구를 사용)
+  compressScheduleHeader();
+};
+
+/** 계절학기 강의실의 상단 막대에 붙이는 클래스 */
+const COMPACT_CLASS = 'klas-helper-compact';
+
+/** 현재 강의실의 학기가 계절학기(3: 여름, 4: 겨울)인지 확인 */
+const isSeasonalSemester = () => {
+  // 상단 막대는 별도 Vue 인스턴스이며, 과목을 바꾸면 이 값도 함께 바뀝니다
+  const header = document.querySelector('#appHeaderSubj')?.__vue__;
+  const yearhakgi = header?.$data?.selectYearhakgi ?? $("input[name='selectedYearhakgi']").val();
+  return /,\s*[34]$/.test(String(yearhakgi ?? '').trim());
+};
+
+/**
+ * 계절학기 강의실에서 상단 막대의 시간표 문구를 같은 교시·장소끼리 묶어 줄입니다.
+ * 예) "월 5,6교시/비211, 화 5,6교시/비211" → "월·화 5,6교시/비211"
+ *
+ * 문구는 Vue가 그리므로 텍스트 노드를 교체하지 않고 값만 바꾸며,
+ * 과목을 바꿔 문구가 갱신되면 다시 판단합니다. 원래 문구는 마우스를 올렸을 때 툴팁으로 보여 줍니다.
+ * 1·2학기에는 아무것도 바꾸지 않습니다.
+ */
+const compressScheduleHeader = () => {
+  const apply = () => {
+    const subtitle = document.querySelector('.subtitle');
+    const element = subtitle?.querySelector('.subjecttime');
+    const textNode = element && [...element.childNodes].find((node) => node.nodeType === Node.TEXT_NODE && node.nodeValue.trim());
+
+    if (!textNode) {
+      return;
+    }
+
+    const current = textNode.nodeValue.trim();
+
+    // 1·2학기: 이전에 줄여 둔 문구가 남아 있으면 되돌리고, 그 외에는 아무것도 하지 않습니다
+    if (!isSeasonalSemester()) {
+      subtitle.classList.remove(COMPACT_CLASS);
+
+      if (element.dataset.klasHelperOriginal && current === element.dataset.klasHelperCompressed && current !== element.dataset.klasHelperOriginal) {
+        textNode.nodeValue = textNode.nodeValue.replace(current, element.dataset.klasHelperOriginal);
+      }
+
+      delete element.dataset.klasHelperOriginal;
+      delete element.dataset.klasHelperCompressed;
+
+      // 계절학기에서 붙인 툴팁이 남아 있으면 지웁니다
+      if (element.dataset.klasHelperTitled) {
+        element.removeAttribute('title');
+        delete element.dataset.klasHelperTitled;
+      }
+
+      return;
+    }
+
+    subtitle.classList.add(COMPACT_CLASS);
+
+    // 이미 줄여 둔 문구이면 건너뜁니다 (우리가 바꾼 값에 반응해 다시 실행되는 것도 여기서 끝남)
+    if (element.dataset.klasHelperCompressed === current) {
+      return;
+    }
+
+    const compressed = compressScheduleText(current);
+    element.dataset.klasHelperOriginal = current;
+    element.dataset.klasHelperCompressed = compressed;
+
+    if (compressed !== current) {
+      textNode.nodeValue = textNode.nodeValue.replace(current, compressed);
+    }
+  };
+
+  // 줄여진 문구 위에 마우스를 올리면 원래 문구 전체를 보여 줍니다 (계절학기에서만)
   $('.subtitle').on('mouseenter', '.subjecttime', function () {
-    this.title = this.textContent.trim();
+    if (this.closest('.subtitle').classList.contains(COMPACT_CLASS)) {
+      this.title = this.dataset.klasHelperOriginal || this.textContent.trim();
+      this.dataset.klasHelperTitled = 'true';
+    }
   });
+
+  const target = document.querySelector('#appHeaderSubj') || document.querySelector('.subtitle');
+
+  if (target) {
+    new MutationObserver(apply).observe(target, { childList: true, characterData: true, subtree: true });
+  }
+
+  apply();
 };
 
 export default () => {
