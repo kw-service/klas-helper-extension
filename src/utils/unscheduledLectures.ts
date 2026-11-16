@@ -7,8 +7,6 @@
  * 두 데이터를 비교해 빠진 학기와 과목을 찾아 시간표에 가상 행으로 그려 줍니다.
  */
 
-declare var axios: any;
-
 /** 수강/성적조회에서 가져온 과목 정보 */
 export interface UnscheduledLecture {
   name: string;
@@ -66,6 +64,23 @@ export const TIMETABLE_HIDE_STYLE_ID = 'klas-helper-timetable-hide';
 const SUNGJUK_API = '/std/cps/inqire/AtnlcScreSungjukInfo.do';
 const YEARHAKGI_API = '/std/cmn/frame/YearhakgiAtnlcSbjectList.do';
 
+/** KLAS API에 POST 요청을 보내고 JSON 응답을 반환합니다. body를 생략하면 본문 없이 요청합니다 */
+const postJson = async (url: string, body?: unknown): Promise<unknown> => {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: body === undefined
+      ? { 'Accept': 'application/json' }
+      : { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${url}. Status: ${response.status}`);
+  }
+
+  return response.json();
+};
+
 const normalize = (text: unknown): string => String(text ?? '').replace(/\s+/g, '').trim();
 
 const parseSemesterValue = (value: string): [string, string] => {
@@ -87,13 +102,13 @@ export const compareSemesterDesc = (a: string, b: string): number => {
  * @returns 학기 값("2026,2")을 키로 하는, 시간표에 없는 과목 목록 (학기 전체가 없는 경우 isMissingSemester = true)
  */
 export const fetchUnscheduledLectures = async (yearhakgiList?: KlasYearhakgi[]): Promise<UnscheduledMap> => {
-  const [sungjukResponse, yearhakgiResponse] = await Promise.all([
-    axios.post(SUNGJUK_API),
-    yearhakgiList ? Promise.resolve({ data: yearhakgiList }) : axios.post(YEARHAKGI_API, {}),
+  const [sungjukData, yearhakgiData] = await Promise.all([
+    postJson(SUNGJUK_API),
+    yearhakgiList ?? postJson(YEARHAKGI_API, {}),
   ]);
 
-  const sungjuk: KlasSungjukSemester[] = Array.isArray(sungjukResponse.data) ? sungjukResponse.data : [];
-  const knownSemesters: KlasYearhakgi[] = Array.isArray(yearhakgiResponse.data) ? yearhakgiResponse.data : [];
+  const sungjuk: KlasSungjukSemester[] = Array.isArray(sungjukData) ? sungjukData : [];
+  const knownSemesters: KlasYearhakgi[] = Array.isArray(yearhakgiData) ? yearhakgiData : [];
 
   const knownSubjects = new Map<string, Set<string>>();
   for (const semester of knownSemesters) {
