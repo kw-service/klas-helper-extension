@@ -3,12 +3,187 @@
  * 페이지 주소: https://klas.kw.ac.kr/std/cmn/frame/Frame.do
  */
 
-import handleTimeTable from './timetable';
+import { addListenerByTimer } from '../utils/dom';
+import {
+  VIRTUAL_ROW_FLAG,
+  compareSemesterDesc,
+  fetchUnscheduledLectures,
+  guardGoLctrum,
+  hasVirtualRows,
+  loadCachedUnscheduledLectures,
+  mergeVirtualRows,
+  revealTimetable,
+  saveCachedUnscheduledLectures,
+  serializeUnscheduled,
+  setPreferredYearhakgi,
+} from '../utils/unscheduledLectures';
+import { handleTimeTable as drawLectureTimes, drawLectureTimesLater } from './timetable';
+
+/** 드롭다운에 KLAS Helper가 추가한 학기를 구분하기 위한 플래그 */
+const VIRTUAL_SEMESTER_FLAG = 'klasHelperVirtual';
+
+/**
+ * KLAS 시간표에 빠진 학기와 과목(현장실습, 교류 과목 등)을 홈 화면 시간표에 반영합니다.
+ * - 수강/성적조회에는 있지만 학기 목록에 없는 학기를 드롭다운에 추가
+ * - 선택한 학기의 시간표에 없는 과목을 가상 행으로 표시
+ * - 가장 최근 학기가 추가된 학기라면 기본 선택
+ *
+ * 깜빡임을 줄이기 위해 지난 방문의 결과(localStorage)를 먼저 적용하고,
+ * 그 사이 최신 데이터를 받아 달라진 경우에만 다시 적용합니다.
+ */
+const fillUnscheduledLectures = async () => {
+  guardGoLctrum(appModule);
+
+  let unscheduled = loadCachedUnscheduledLectures() ?? new Map();
+  // 확장 프로그램이 자동으로 선택한 학기 (사용자가 직접 고른 학기와 구분하기 위해 기록)
+  let autoSelectedValue = null;
+  let pendingSelection = null;
+
+  // 선택한 학기의 시간표에 없는 과목을 가상 행으로 덧붙입니다 (timeTableList가 바뀔 때마다 호출)
+  const apply = () => {
+    const timeTableList = appModule.$data.timeTableList;
+    if (hasVirtualRows(timeTableList)) {
+      return;
+    }
+
+    const yearhakgi = appModule.$data.searchYearhakgi;
+    const entry = unscheduled.get(yearhakgi);
+    const lectures = entry ? entry.lectures : [];
+
+    // 추가한 학기는 KLAS가 학기 이름을 비워서 내려주므로 직접 채워 줍니다
+    if (entry?.isMissingSemester && !appModule.$data.yearhakgi) {
+      appModule.yearhakgi = entry.label.replace('년도', '학년도');
+    }
+
+    if (lectures.length > 0) {
+      appModule.timeTableList = mergeVirtualRows(timeTableList, lectures, yearhakgi);
+    }
+
+    // 기본 학기 전환이 끝나 올바른 학기가 그려졌으면 숨겨 둔 시간표를 보여 줍니다
+    const reachedPending = pendingSelection !== null && yearhakgi === pendingSelection;
+    appModule.$nextTick(() => {
+      drawLectureTimes();
+      if (reachedPending) {
+        pendingSelection = null;
+        revealTimetable();
+      }
+    });
+  };
+
+  appModule.$watch('timeTableList', apply);
+
+  // 학기 목록에 없는 학기를 드롭다운에 추가하고, 더 이상 해당하지 않는 학기는 제거합니다
+  const applySemesters = () => {
+    const yearhakgiList = appModule.$data.yearhakgiList;
+
+    for (let i = yearhakgiList.length - 1; i >= 0; i--) {
+      const item = yearhakgiList[i];
+      const stillMissing = unscheduled.get(item.value)?.isMissingSemester;
+      if (item[VIRTUAL_SEMESTER_FLAG] && !stillMissing && item.value !== appModule.$data.searchYearhakgi) {
+        yearhakgiList.splice(i, 1);
+      }
+    }
+
+    const knownValues = new Set(yearhakgiList.map((item) => item.value));
+
+    for (const [value, entry] of unscheduled) {
+      if (!entry.isMissingSemester || knownValues.has(value)) {
+        continue;
+      }
+
+      const semester = { value, label: entry.label, subjList: [], [VIRTUAL_SEMESTER_FLAG]: true };
+      const insertIndex = yearhakgiList.findIndex((item) => compareSemesterDesc(value, item.value) < 0);
+
+      if (insertIndex === -1) {
+        yearhakgiList.push(semester);
+      }
+      else {
+        yearhakgiList.splice(insertIndex, 0, semester);
+      }
+    }
+  };
+
+  // 가장 최근 학기가 추가된 학기라면 KLAS 기본 선택(원래 첫 번째 학기) 대신 그 학기를 보여 줍니다
+  const selectNewestIfVirtual = async () => {
+    const yearhakgiList = appModule.$data.yearhakgiList;
+    const newest = yearhakgiList[0];
+    const isNewestVirtual = !!newest?.[VIRTUAL_SEMESTER_FLAG];
+
+    // 다음 방문에서 content-style이 깜빡임을 막을 수 있도록 기록
+    setPreferredYearhakgi(isNewestVirtual ? newest.value : null);
+
+    const selectElement = document.querySelector('.scheduletitle > select');
+    if (!isNewestVirtual || !selectElement) {
+      return false;
+    }
+
+    // KLAS가 기본으로 고른 학기(추가한 학기를 제외한 첫 학기)이거나 이전에 자동으로 고른 학기일 때만 최신 학기로 바꿉니다.
+    // 사용자가 직접 다른 학기를 고른 경우에는 그대로 둡니다.
+    const current = appModule.$data.searchYearhakgi;
+    const klasDefault = yearhakgiList.find((item) => !item[VIRTUAL_SEMESTER_FLAG])?.value;
+    const canSwitch = current === klasDefault || current === autoSelectedValue;
+    if (current === newest.value || !canSwitch) {
+      return false;
+    }
+
+    autoSelectedValue = newest.value;
+    pendingSelection = newest.value;
+    await appModule.$nextTick();
+    selectElement.value = newest.value;
+    selectElement.dispatchEvent(new Event('change'));
+    return true;
+  };
+
+  const run = async () => {
+    applySemesters();
+    if (!(await selectNewestIfVirtual())) {
+      apply();
+    }
+  };
+
+  // 1) 지난 방문의 결과를 즉시 적용
+  if (unscheduled.size > 0) {
+    await run();
+  }
+
+  // 2) 최신 데이터를 받아 달라졌으면 다시 적용
+  try {
+    const realSemesters = appModule.$data.yearhakgiList.filter((item) => !item[VIRTUAL_SEMESTER_FLAG]);
+    const fresh = await fetchUnscheduledLectures(realSemesters);
+    const changed = serializeUnscheduled(fresh) !== serializeUnscheduled(unscheduled);
+    unscheduled = fresh;
+    saveCachedUnscheduledLectures(fresh);
+
+    if (changed) {
+      // 캐시로 그려 둔 가상 행은 최신 데이터와 다를 수 있으므로 걷어낸 뒤 다시 적용합니다 (실제 행은 그대로 둡니다)
+      const current = appModule.$data.timeTableList;
+      if (hasVirtualRows(current)) {
+        appModule.timeTableList = current.filter((row) => !row[VIRTUAL_ROW_FLAG]);
+      }
+      await run();
+    }
+  }
+  catch (error) {
+    console.error('[KLAS Helper] 시간표 보완 데이터를 불러오지 못했습니다.', error);
+  }
+  finally {
+    // 기본 학기 전환을 기다리는 중이 아니라면 숨겨 둔 시간표를 바로 보여 줍니다
+    if (pendingSelection === null) {
+      appModule.$nextTick(revealTimetable);
+    }
+  }
+};
 
 export default () => {
   // 타임테이블 시간 그리기
-  handleTimeTable();
-  document.querySelector('.scheduletitle > select').addEventListener('change', handleTimeTable);
+  drawLectureTimesLater();
+  document.querySelector('.scheduletitle > select').addEventListener('change', drawLectureTimesLater);
+
+  // KLAS 시간표에 빠진 현장실습·교류 과목 반영
+  addListenerByTimer(
+    () => appModule?.$data?.yearhakgiList?.length > 0 && appModule?.$data?.timeTableList?.length > 0,
+    fillUnscheduledLectures
+  );
 
   // 기말 평가 안내문 표시
   (async () => {

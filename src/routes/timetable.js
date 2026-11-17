@@ -2,6 +2,16 @@
  * 페이지 이름: 수업시간표
  * 페이지 주소: https://klas.kw.ac.kr/std/cps/atnlc/TimetableStdPage.do
  */
+
+import { addListenerByTimer } from '../utils/dom';
+import {
+  VIRTUAL_ROW_FLAG,
+  fetchUnscheduledLectures,
+  guardGoLctrum,
+  hasVirtualRows,
+  mergeVirtualRows,
+} from '../utils/unscheduledLectures';
+
 const lectureStartTime = {
   0: '08:00',
   1: '09:00',
@@ -32,12 +42,20 @@ const lectureEndTime = {
   11: '22:05',
 };
 
-const handleTimeTable = () => {
+export const handleTimeTable = () => {
   const timeTable = appModule.$data.timeTableList;
   const lectureList = [];
 
+  // 학기를 바꾸면 Vue가 칸을 재사용하면서 이전 학기의 시간 표시가 남을 수 있으므로 모두 지우고 다시 그립니다
+  $('.scheduletb td div > span.time').remove();
+
   // 원본 소스에서 실제 그려지는 시간표를 파싱합니다
   for (const item of timeTable) {
+    // KLAS Helper가 추가한 가상 행(현장실습 등)은 교시가 없으므로 건너뜁니다
+    if (item[VIRTUAL_ROW_FLAG]) {
+      continue;
+    }
+
     for (let i = 1; i < 10; i++) {
       const subjNm = item[`wtSubjNm_${i}`];
       const subjPrintSeq = item[`wtSubjPrintSeq_${i}`];
@@ -77,4 +95,61 @@ const handleTimeTable = () => {
   }
 };
 
-export default () => { setTimeout(handleTimeTable, 700); };
+/**
+ * 수업시간표 페이지에서 KLAS 시간표에 빠진 과목(현장실습, 교류 과목 등)을 가상 행으로 채웁니다.
+ * 조회 학기가 바뀔 때마다 timeTableList가 교체되므로 $watch로 감지합니다.
+ */
+const fillUnscheduledLectures = () => {
+  guardGoLctrum(appModule);
+
+  let unscheduled = null;
+  let loading = null;
+
+  // 보완 데이터를 불러옵니다. 실패하면 다음 시간표 조회 때 다시 시도합니다 (동시에 한 번만 요청)
+  const load = () => {
+    if (!loading) {
+      loading = fetchUnscheduledLectures()
+        .then((result) => { unscheduled = result; })
+        .catch((error) => { console.error('[KLAS Helper] 시간표 보완 데이터를 불러오지 못했습니다.', error); })
+        .finally(() => { loading = null; });
+    }
+    return loading;
+  };
+
+  const apply = () => {
+    const timeTableList = appModule.$data.timeTableList;
+    if (hasVirtualRows(timeTableList)) {
+      return;
+    }
+
+    if (!unscheduled) {
+      load().then(() => {
+        if (unscheduled) {
+          apply();
+        }
+      });
+      return;
+    }
+
+    const yearhakgi = `${appModule.$data.searchYear},${appModule.$data.searchHakgi}`;
+    const entry = unscheduled.get(yearhakgi);
+    const lectures = entry ? entry.lectures : [];
+
+    if (lectures.length === 0) {
+      return;
+    }
+
+    appModule.timeTableList = mergeVirtualRows(timeTableList, lectures, yearhakgi);
+  };
+
+  appModule.$watch('timeTableList', apply);
+  apply();
+};
+
+/** Vue가 시간표를 그린 뒤 강의 시간을 표시합니다 (홈 화면에서도 사용) */
+export const drawLectureTimesLater = () => { setTimeout(handleTimeTable, 700); };
+
+export default () => {
+  drawLectureTimesLater();
+  addListenerByTimer(() => appModule?.$data?.timeTableList?.length > 0, fillUnscheduledLectures);
+};
